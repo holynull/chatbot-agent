@@ -3,7 +3,7 @@ from langchain.callbacks.manager import AsyncCallbackManager
 from langchain.memory import ConversationBufferMemory 
 from langchain.chat_models import ChatOpenAI
 from langchain.vectorstores.base import VectorStore
-from langchain.utilities import GoogleSerperAPIWrapper
+from langchain.utilities import SerpAPIWrapper
 import os
 from langchain.agents import Tool
 from langchain.agents import initialize_agent,AgentType,AgentExecutor
@@ -19,7 +19,7 @@ def get_agent(
         verbose=True,
         # request_timeout=120,
     )
-    search = GoogleSerperAPIWrapper()
+    search = SerpAPIWrapper()
     doc_search = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vectorstore.as_retriever())
     tools = [
         Tool(
