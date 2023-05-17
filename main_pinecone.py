@@ -80,9 +80,10 @@ async def websocket_endpoint(websocket: WebSocket):
             start_resp = ChatResponse(sender="bot", message="", type="start")
             await websocket.send_json(start_resp.dict())
 
-            result = await qa_chain.arun(input=question)
+            # result = await qa_chain.arun(input=question)
+            result = qa_chain.run(input=question)
             print(f"Result: {result}")
-            chat_history.append((question, result["answer"]))
+            chat_history.append((question, result))
 
             end_resp = ChatResponse(sender="bot", message="", type="end")
             await websocket.send_json(end_resp.dict())

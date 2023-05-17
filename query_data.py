@@ -3,7 +3,7 @@ from langchain.callbacks.manager import AsyncCallbackManager
 from langchain.memory import ConversationBufferMemory 
 from langchain.chat_models import ChatOpenAI
 from langchain.vectorstores.base import VectorStore
-from langchain.utilities import SerpAPIWrapper
+from langchain.utilities import GoogleSerperAPIWrapper
 import os
 from langchain.agents import Tool
 from langchain.agents import initialize_agent,AgentType,AgentExecutor
@@ -14,12 +14,13 @@ def get_agent(
     chain_type: str, vectorstore: VectorStore, question_handler, stream_handler, chainCallbackHandler) -> AgentExecutor:
     question_manager = AsyncCallbackManager([question_handler])
     llm = ChatOpenAI(
-        model_name="gpt-4",
+        model_name="gpt-3.5-turbo",
         temperature=0,
         verbose=True,
         callback_manager=question_manager,
+        # request_timeout=120,
     )
-    search = SerpAPIWrapper(serpapi_api_key=os.getenv("SERPAPI_API_KEY"))
+    search = GoogleSerperAPIWrapper()
     doc_search = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vectorstore.as_retriever())
     tools = [
         Tool(
