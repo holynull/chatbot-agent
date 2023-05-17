@@ -22,15 +22,15 @@ def get_agent(
     search = GoogleSerperAPIWrapper()
     doc_search = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vectorstore.as_retriever())
     tools = [
+		Tool(
+        	name = "QA System",
+        	func=doc_search.run,
+        	description="useful for when you need to answer questions about ruff (a python linter). Input should be a fully formed question."
+        ),
         Tool(
             name = "Current Search",
             func=search.run,
             description="useful for when you need to answer questions about current events or the current state of the world. the input to this should be a single search term."
-        ),
-        Tool(
-        	name = "QA System",
-        	func=doc_search.run,
-        	description="useful for when you need to answer questions about ruff (a python linter). Input should be a fully formed question."
         ),
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
