@@ -64,7 +64,7 @@ async def websocket_endpoint(websocket: WebSocket):
     chain_handler = ChainCallbackHandler(websocket)
     chat_history = []
     qa_chain = get_agent(chain_type, vectorstore, question_handler,
-                         stream_handler, chain_handler, True)
+                         stream_handler, chain_handler )
     # Use the below line instead of the above line to enable tracing
     # Ensure `langchain-server` is running
     # qa_chain = get_chain(vectorstore, question_handler, stream_handler, tracing=True)

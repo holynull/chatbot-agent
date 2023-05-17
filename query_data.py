@@ -12,6 +12,7 @@ from langchain.chains import RetrievalQA
 
 def get_agent(
     chain_type: str, vectorstore: VectorStore, question_handler, stream_handler, chainCallbackHandler) -> AgentExecutor:
+    question_manager = AsyncCallbackManager([question_handler])
     llm = ChatOpenAI(
         model_name="gpt-4",
         temperature=0,
@@ -34,7 +35,6 @@ def get_agent(
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     manager = AsyncCallbackManager([chainCallbackHandler])
-    question_manager = AsyncCallbackManager([question_handler])
     stream_manager = AsyncCallbackManager([stream_handler])
 
     
