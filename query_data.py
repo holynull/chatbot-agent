@@ -11,13 +11,12 @@ from langchain.chains import RetrievalQA
 
 
 def get_agent(
-    chain_type: str, vectorstore: VectorStore, question_handler, stream_handler, chainCallbackHandler) -> AgentExecutor:
-    question_manager = AsyncCallbackManager([question_handler])
+    chain_type: str, vectorstore: VectorStore, agent_cb_handler) -> AgentExecutor:
+    agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
     llm = ChatOpenAI(
         model_name="gpt-4",
         temperature=0,
         verbose=True,
-        callback_manager=question_manager,
         # request_timeout=120,
     )
     search = GoogleSerperAPIWrapper()
@@ -29,15 +28,12 @@ def get_agent(
             description="useful for when you need to answer questions about current events or the current state of the world. the input to this should be a single search term."
         ),
         Tool(
-        name = "QA System",
-        func=doc_search.run,
-        description="useful for when you need to answer questions about ruff (a python linter). Input should be a fully formed question."
+        	name = "QA System",
+        	func=doc_search.run,
+        	description="useful for when you need to answer questions about ruff (a python linter). Input should be a fully formed question."
         ),
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-    manager = AsyncCallbackManager([chainCallbackHandler])
-    stream_manager = AsyncCallbackManager([stream_handler])
-
     
-    agent_chain = initialize_agent(tools, llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
+    agent_chain = initialize_agent(tools=tools, lln=llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
     return agent_chain 
