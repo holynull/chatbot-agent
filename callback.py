@@ -1,12 +1,12 @@
 """Callback handlers used in the app."""
 from typing import Any, Dict, List, Optional, Union
 from uuid import UUID
-from langchain.callbacks.base import BaseCallbackManager
+from langchain.callbacks.base import BaseCallbackHandler
 from langchain.callbacks.base import LLMResult
 from schemas import ChatResponse
 from langchain.schema import AgentAction,AgentFinish
 
-class AgentCallbackHandler(BaseCallbackManager):
+class AgentCallbackHandler(BaseCallbackHandler):
     """Callback handler for question generation."""
 
     def __init__(self, websocket):
