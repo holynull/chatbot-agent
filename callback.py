@@ -100,7 +100,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
     ) -> None:
         """Run on agent end."""
         print(f"ON_AGENT_FINISH: {finish.return_values}")
-        resp = ChatResponse(sender="bot", message=outputs.output, type="stream")
+        resp = ChatResponse(sender="bot", message=finish.return_values.output, type="stream")
         await self.websocket.send_json(resp.dict())
         
 
