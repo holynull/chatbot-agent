@@ -57,7 +57,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         **kwargs: Any,
     ) -> Any:
         print(f"ON_CHAIN_END: Outputs: {outputs}")
-        resp = ChatResponse(sender="bot", message=outputs.output, type="stream")
+        resp = ChatResponse(sender="bot", message=outputs['output'], type="stream")
         self.websocket.send_json(resp.dict())
         # if outputs['answer'] != None:
         #     resp = ChatResponse(
