@@ -14,7 +14,7 @@ def get_agent(
     chain_type: str, vectorstore: VectorStore, agent_cb_handler) -> AgentExecutor:
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
     llm = ChatOpenAI(
-        model_name="gpt-4",
+        # model_name="gpt-4",
         temperature=0,
         verbose=True,
         # request_timeout=120,
@@ -25,7 +25,7 @@ def get_agent(
 		Tool(
         	name = "QA System",
         	func=doc_search.run,
-        	description="useful for when you need to answer questions about ruff (a python linter). Input should be a fully formed question."
+        	description="useful for when you need to answer questions about swft or metapath. Input should be a fully formed question."
         ),
         Tool(
             name = "Current Search",
@@ -35,5 +35,5 @@ def get_agent(
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     
-    agent_chain = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
+    agent_chain = initialize_agent(tools=tools, llm=llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
     return agent_chain 
