@@ -16,10 +16,12 @@ class AgentCallbackHandler(BaseCallbackHandler):
         self, serialized: Dict[str, Any], prompts: List[str], **kwargs: Any
     ) -> None:
         """Run when LLM starts running."""
-        resp = ChatResponse(
-            sender="bot", message="Synthesizing question...", type="info"
-        )
-        self.websocket.send_json(resp.dict())
+        print(f"ON_LLM_START")
+        # resp = ChatResponse(
+        #     sender="bot", message="Synthesizing question...", type="info"
+        # )
+        # self.websocket.send_json(resp.dict())
+
     def on_llm_end(
         self,
         response: LLMResult,
@@ -29,7 +31,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         **kwargs: Any,
     ) -> None:
         """Run when LLM ends running.""" 
-        print(f"On llm end: {response.dict}")
+        print(f"ON_LLM_END: {response.dict}")
     # def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
     #     print(f"llm new token: {token}")
     #     resp = ChatResponse(sender="bot", message=token, type="stream")
@@ -44,7 +46,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         parent_run_id: Optional[UUID] = None,
         **kwargs: Any,
     ) -> None:
-        print(f"On chain_start: Inputs: {inputs}")
+        print(f"ON_CHAIN_START: Inputs: {inputs}")
 
     def on_chain_end(
         self,
@@ -54,7 +56,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         parent_run_id: Optional[UUID] = None,
         **kwargs: Any,
     ) -> Any:
-        print(f"On chain_end: Outputs: {outputs}")
+        print(f"ON_CHAIN_END: Outputs: {outputs}")
         # if outputs['answer'] != None:
         #     resp = ChatResponse(
         #         sender="bot", message=outputs['answer'], type="stream")
@@ -73,7 +75,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         **kwargs: Any,
     ) -> None:
         """Run when tool starts running."""
-        print(f"On tool_start: input: {input_str}")
+        print(f"ON_TOOL_START: input: {input_str}")
 
     def on_tool_end(
         self,
@@ -84,7 +86,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         **kwargs: Any,
     ) -> None:
         """Run when tool ends running."""
-        print(f"On tool_end: output: {output}")
+        print(f"ON_TOOL_END: output: {output}")
     
     def on_agent_finish(
         self,
@@ -95,7 +97,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         **kwargs: Any,
     ) -> None:
         """Run on agent end."""
-        print(f"On agent_finish: {finish.return_values}")
+        print(f"ON_AGENT_FINISH: {finish.return_values}")
 
     
     def on_agent_action(
@@ -107,4 +109,4 @@ class AgentCallbackHandler(BaseCallbackHandler):
         **kwargs: Any,
     ) -> None:
         """Run on agent action."""
-        print(f"On agent_action: tool: {action.tool}")
+        print(f"ON_AGENT_ACTION: tool: {action.tool}")
