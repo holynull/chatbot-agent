@@ -90,7 +90,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         """Run when tool ends running."""
         print(f"ON_TOOL_END: output: {output}")
     
-    def on_agent_finish(
+    async def on_agent_finish(
         self,
         finish: AgentFinish,
         *,
@@ -101,7 +101,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         """Run on agent end."""
         print(f"ON_AGENT_FINISH: {finish.return_values}")
         resp = ChatResponse(sender="bot", message=finish.return_values['output'], type="stream")
-        self.websocket.send_json(resp.dict())
+        await self.websocket.send_json(resp.dict())
         
 
     
