@@ -48,7 +48,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
     ) -> None:
         print(f"ON_CHAIN_START: Inputs: {inputs}")
 
-    async def on_chain_end(
+    def on_chain_end(
         self,
         outputs: Dict[str, Any],
         *,
@@ -58,7 +58,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
     ) -> Any:
         print(f"ON_CHAIN_END: Outputs: {outputs}")
         resp = ChatResponse(sender="bot", message=outputs.output, type="stream")
-        await self.websocket.send_json(resp.dict())
+        self.websocket.send_json(resp.dict())
         # if outputs['answer'] != None:
         #     resp = ChatResponse(
         #         sender="bot", message=outputs['answer'], type="stream")
@@ -90,7 +90,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         """Run when tool ends running."""
         print(f"ON_TOOL_END: output: {output}")
     
-    async def on_agent_finish(
+    def on_agent_finish(
         self,
         finish: AgentFinish,
         *,
@@ -101,7 +101,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
         """Run on agent end."""
         print(f"ON_AGENT_FINISH: {finish.return_values}")
         resp = ChatResponse(sender="bot", message=finish.return_values.output, type="stream")
-        await self.websocket.send_json(resp.dict())
+        self.websocket.send_json(resp.dict())
         
 
     
