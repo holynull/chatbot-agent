@@ -66,12 +66,12 @@ def get_agent(
 		Tool(
         	name = "QA System",
         	func=doc_search.run,
-        	description="useful for when you need to answer questions about swft or metapath. Input should be a fully formed question."
+        	description="当您需要回答有关swft或metapath的问题时，这很有用。输入应该是一个完整的问题。"
         ),
         Tool(
             name = "Current Search",
             func=search.run,
-            description="useful for when you need to answer questions about current events or the current state of the world. the input to this should be a single search term."
+            description="当你需要回答有关时事或世界现状的问题时，这很有用。对此的输入应该是单个搜索项。"
         ),
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
