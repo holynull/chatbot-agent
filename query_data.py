@@ -80,8 +80,7 @@ def get_agent(
             coroutine=search.arun
         ),
     ]
-    tools.append(toolkit.get_tools())
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     
-    agent_chain = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
-    return agent_chain 
+    agent = initialize_agent(tools=tools+toolkit.get_tools(), llm=llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
+    return agent
