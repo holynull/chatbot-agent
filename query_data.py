@@ -67,8 +67,8 @@ def get_agent(
         # request_timeout=120,
     ) 
     search = GoogleSerperAPIWrapper()
-    doc_search_swft = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_swft.as_retriever())
-    doc_search_path = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_path.as_retriever())
+    doc_search_swft = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_swft.as_retriever(),return_source_documents=True)
+    doc_search_path = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_path.as_retriever(),return_source_documents=True)
     # doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
     # zapier = ZapierNLAWrapper()
     # toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
@@ -88,7 +88,10 @@ def get_agent(
         Tool(
             name = "Current Search",
             func=search.run,
-            description="useful for when you need to answer questions about current events or the current state of the world. the input to this should be a single search term.",
+            description="""
+            useful for when you need to answer questions about current events or the current state of the world or you need to ask with search. 
+            the input to this should be a single search term.
+            """,
             coroutine=search.arun
         ),
     ]
