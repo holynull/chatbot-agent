@@ -64,8 +64,8 @@ def get_agent(
     search = GoogleSerperAPIWrapper()
     doc_search = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vectorstore.as_retriever())
     # doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
-    zapier = ZapierNLAWrapper()
-    toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
+    # zapier = ZapierNLAWrapper()
+    # toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
     tools = [
         Tool(
             name = "QA System",
