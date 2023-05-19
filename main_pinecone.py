@@ -48,7 +48,7 @@ async def startup_event():
     global vcs_swft
     global vcs_path
     index_swft = "data-swft"
-    index_path = "data-path"
+    index_path = "data-metapath"
     embeddings = OpenAIEmbeddings(model="gpt-4")
     vcs_swft = Pinecone.from_existing_index(index_swft, embeddings)
     vcs_path = Pinecone.from_existing_index(index_path, embeddings)
