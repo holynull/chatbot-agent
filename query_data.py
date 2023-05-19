@@ -82,5 +82,5 @@ def get_agent(
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     
-    agent = initialize_agent(tools=tools+toolkit.get_tools(), llm=llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
+    agent = initialize_agent(tools=tools+toolkit.get_tools(), llm=llm, agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
     return agent
