@@ -45,10 +45,13 @@ vectorstore: Optional[VectorStore] = None
 @app.on_event("startup")
 async def startup_event():
     logging.info("loading vectorstore")
-    global vectorstore
-    index_name = "data-1"
+    global vcs_swft
+    global vcs_path
+    index_swft = "data-swft"
+    index_path = "data-path"
     embeddings = OpenAIEmbeddings(model="gpt-4")
-    vectorstore = Pinecone.from_existing_index(index_name, embeddings)
+    vcs_swft = Pinecone.from_existing_index(index_swft, embeddings)
+    vcs_path = Pinecone.from_existing_index(index_path, embeddings)
 
 
 @app.get("/")
@@ -61,7 +64,7 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     agent_cb_handler = AgentCallbackHandler(websocket)
     chat_history = []
-    qa_chain = get_agent(chain_type, vectorstore, agent_cb_handler=agent_cb_handler)
+    qa_chain = get_agent(chain_type=chain_type, vcs_path=vcs_path,vcs_swft=vcs_swft, agent_cb_handler=agent_cb_handler)
     # Use the below line instead of the above line to enable tracing
     # Ensure `langchain-server` is running
     # qa_chain = get_chain(vectorstore, question_handler, stream_handler, tracing=True)
