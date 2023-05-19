@@ -48,7 +48,7 @@ class AgentCallbackHandler(AsyncCallbackHandler):
     ) -> None:
         print(f"ON_CHAIN_START: Inputs: {inputs}")
 
-    async def on_chain_end(
+    def on_chain_end(
         self,
         outputs: Dict[str, Any],
         *,
@@ -57,8 +57,8 @@ class AgentCallbackHandler(AsyncCallbackHandler):
         **kwargs: Any,
     ) -> Any:
         print(f"ON_CHAIN_END: Outputs: {outputs}")
-        resp = ChatResponse(sender="bot", message=outputs['output'], type="stream")
-        await self.websocket.send_json(resp.dict())
+        # resp = ChatResponse(sender="bot", message=outputs['output'], type="stream")
+        # await self.websocket.send_json(resp.dict())
         # resp = ChatResponse(sender="bot", message=outputs['output'], type="stream")
         # self.websocket.send_json(resp.dict())
         # if outputs['answer'] != None:
