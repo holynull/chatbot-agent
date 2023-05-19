@@ -12,7 +12,9 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.llm import LLMChain
 from langchain.chains.chat_vector_db.prompts import CONDENSE_QUESTION_PROMPT
 from langchain.chains.question_answering import load_qa_chain
-from langchain.tools import StructuredTool
+from langchain.agents.agent_toolkits import ZapierToolkit
+from langchain.utilities.zapier import ZapierNLAWrapper
+
 
 def get_qa_chain(
     chain_type: str, vectorstore: VectorStore
@@ -62,6 +64,8 @@ def get_agent(
     search = GoogleSerperAPIWrapper()
     doc_search = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vectorstore.as_retriever())
     # doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
+    zapier = ZapierNLAWrapper()
+    toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
     tools = [
         Tool(
             name = "QA System",
@@ -76,6 +80,7 @@ def get_agent(
             coroutine=search.arun
         ),
     ]
+    tools.append(toolkit.get_tools())
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     
     agent_chain = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
