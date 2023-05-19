@@ -54,7 +54,7 @@ def get_agent(
     chain_type: str, vectorstore: VectorStore, agent_cb_handler) -> AgentExecutor:
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
     llm = ChatOpenAI(
-        # model_name="gpt-4",
+        model_name="gpt-4",
         temperature=0,
         verbose=True,
         # request_timeout=120,
@@ -76,5 +76,5 @@ def get_agent(
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     
-    agent_chain = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
+    agent_chain = initialize_agent(tools=tools, llm=llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
     return agent_chain 
