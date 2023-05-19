@@ -12,7 +12,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.llm import LLMChain
 from langchain.chains.chat_vector_db.prompts import CONDENSE_QUESTION_PROMPT
 from langchain.chains.question_answering import load_qa_chain
-                                                     
+from langchain.tools import StructuredTool
 
 def get_qa_chain(
     chain_type: str, vectorstore: VectorStore
@@ -63,15 +63,17 @@ def get_agent(
     doc_search = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vectorstore.as_retriever())
     # doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
     tools = [
-		Tool(
-        	name = "QA System",
-        	func=doc_search.run,
-        	description="useful for when you need to answer questions about swft or metapath. Input should be a fully formed question."
+        Tool(
+            name = "QA System",
+            func=doc_search.run,
+            description="useful for when you need to answer questions about swft or metapath. Input should be a fully formed question.",
+            coroutine=doc_search.arun
         ),
         Tool(
             name = "Current Search",
             func=search.run,
-            description="useful for when you need to answer questions about current events or the current state of the world. the input to this should be a single search term."
+            description="useful for when you need to answer questions about current events or the current state of the world. the input to this should be a single search term.",
+            coroutine=search.arun
         ),
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)

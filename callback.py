@@ -1,12 +1,12 @@
 """Callback handlers used in the app."""
 from typing import Any, Dict, List, Optional, Union
 from uuid import UUID
-from langchain.callbacks.base import BaseCallbackHandler
+from langchain.callbacks.base import AsyncCallbackHandler
 from langchain.callbacks.base import LLMResult
 from schemas import ChatResponse
 from langchain.schema import AgentAction,AgentFinish
 
-class AgentCallbackHandler(BaseCallbackHandler):
+class AgentCallbackHandler(AsyncCallbackHandler):
     """Callback handler for question generation."""
 
     def __init__(self, websocket):
@@ -48,7 +48,7 @@ class AgentCallbackHandler(BaseCallbackHandler):
     ) -> None:
         print(f"ON_CHAIN_START: Inputs: {inputs}")
 
-    def on_chain_end(
+    async def on_chain_end(
         self,
         outputs: Dict[str, Any],
         *,
@@ -57,6 +57,8 @@ class AgentCallbackHandler(BaseCallbackHandler):
         **kwargs: Any,
     ) -> Any:
         print(f"ON_CHAIN_END: Outputs: {outputs}")
+        resp = ChatResponse(sender="bot", message=outputs.ouput, type="stream")
+        await self.websocket.send_json(resp.dict())
         # resp = ChatResponse(sender="bot", message=outputs['output'], type="stream")
         # self.websocket.send_json(resp.dict())
         # if outputs['answer'] != None:
