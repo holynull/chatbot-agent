@@ -53,7 +53,7 @@ def get_qa_chain(
     return qa
 
 def get_agent(
-    chain_type: str, vectorstore: VectorStore, agent_cb_handler) -> AgentExecutor:
+    chain_type: str, vcs_swft: VectorStore,vcs_path: VectorStore, agent_cb_handler) -> AgentExecutor:
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
     llm = ChatOpenAI(
         model_name="gpt-4",
@@ -62,16 +62,23 @@ def get_agent(
         # request_timeout=120,
     )
     search = GoogleSerperAPIWrapper()
-    doc_search = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vectorstore.as_retriever())
+    doc_search_swft = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vcs_swft.as_retriever())
+    doc_search_path = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vcs_path.as_retriever())
     # doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
     # zapier = ZapierNLAWrapper()
     # toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
     tools = [
         Tool(
-            name = "QA System",
-            func=doc_search.run,
-            description="useful for when you need to answer questions about swft or metapath. Input should be a fully formed question.",
-            coroutine=doc_search.arun
+            name = "QA SWFT System",
+            func=doc_search_swft.run,
+            description="useful for when you need to answer questions about swft. Input should be a fully formed question.",
+            coroutine=doc_search_swft.arun
+        ),
+         Tool(
+            name = "QA Metapath System",
+            func=doc_search_path.run,
+            description="useful for when you need to answer questions about metapath. Input should be a fully formed question.",
+            coroutine=doc_search_path.arun
         ),
         Tool(
             name = "Current Search",
