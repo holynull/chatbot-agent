@@ -60,8 +60,8 @@ def get_agent(
         # request_timeout=120,
     )
     search = GoogleSerperAPIWrapper()
-    # doc_search = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vectorstore.as_retriever())
-    doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
+    doc_search = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vectorstore.as_retriever())
+    # doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
     tools = [
 		Tool(
         	name = "QA System",
