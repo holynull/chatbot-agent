@@ -66,7 +66,7 @@ def get_agent(
 		Tool(
         	name = "QA System",
         	func=doc_search.run,
-        	description="useful for when you need to answer questions about swft or metapath."
+        	description="useful for when you need to answer questions about swft or metapath. Input should be a fully formed question."
         ),
         Tool(
             name = "Current Search",
