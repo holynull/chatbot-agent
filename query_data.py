@@ -61,9 +61,14 @@ def get_agent(
         verbose=True,
         # request_timeout=120,
     )
+    llm_qa = ChatOpenAI(
+        temperature=0,
+        verbose=True,
+        # request_timeout=120,
+    ) 
     search = GoogleSerperAPIWrapper()
-    doc_search_swft = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vcs_swft.as_retriever())
-    doc_search_path = RetrievalQA.from_chain_type(llm=llm, chain_type=chain_type, retriever=vcs_path.as_retriever())
+    doc_search_swft = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_swft.as_retriever())
+    doc_search_path = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_path.as_retriever())
     # doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
     # zapier = ZapierNLAWrapper()
     # toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
