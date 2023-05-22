@@ -104,16 +104,18 @@ def get_agent(
     And assistant as the CMO of SWFT and Metapath.
     If user ask question in some language, assistant must answer the question in that language finally.
     """ 
+    SYSTEM_MESSAGE_PREFIX = """Answer the following questions as best you can. Remember you should answer the question use the language of the original input question. You have access to the following tools:"""
     agent_excutor = initialize_agent(
         tools=tools,
         llm=llm, 
-        agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, 
+        agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION, 
         verbose=True, memory=memory,
         callback_manager=agent_cb_manager,
         # system_message=PREFIX,
         # human_message="I'm a user of swft and metapath.",
-        prefix=PREFIX,
+        # prefix=PREFIX,
         # suffix=suffix,
+        system_message_prefix = SYSTEM_MESSAGE_PREFIX,
     )
     # agent=ConversationalChatAgent.from_llm_and_tools(
     #     llm=llm,
