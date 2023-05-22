@@ -12,9 +12,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.llm import LLMChain
 from langchain.chains.chat_vector_db.prompts import CONDENSE_QUESTION_PROMPT
 from langchain.chains.question_answering import load_qa_chain
-from langchain.agents.agent_toolkits import ZapierToolkit
-from langchain.utilities.zapier import ZapierNLAWrapper
-
+from langchain.agents.conversational_chat.base import ConversationalChatAgent
 
 def get_qa_chain(
     chain_type: str, vectorstore: VectorStore
@@ -97,5 +95,15 @@ def get_agent(
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     
-    agent = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
+    # agent = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
+    agent=ConversationalChatAgent.from_llm_and_tools(
+        llm=llm,
+        tools=tools,
+        agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, 
+        verbose=True, 
+        memory=memory,
+        callback_manager=agent_cb_manager,
+        system_message="你是swft和metapath的CMO。",
+        human_message="我是swft和metapath的用户",
+        )
     return agent
