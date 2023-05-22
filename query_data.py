@@ -95,15 +95,27 @@ def get_agent(
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     
-    # agent = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory,callback_manager=agent_cb_manager)
-    agent=ConversationalChatAgent.from_llm_and_tools(
-        llm=llm,
+    agent_excutor = initialize_agent(
         tools=tools,
+        llm=llm, 
         agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, 
-        verbose=True, 
-        memory=memory,
+        verbose=True, memory=memory,
         callback_manager=agent_cb_manager,
         system_message="你是swft和metapath的CMO。",
         human_message="我是swft和metapath的用户",
-        )
-    return agent
+    )
+    # agent=ConversationalChatAgent.from_llm_and_tools(
+    #     llm=llm,
+    #     tools=tools,
+    #     agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, 
+    #     system_message="你是swft和metapath的CMO。",
+    #     human_message="我是swft和metapath的用户",
+    #     )
+    # agent_excutor=AgentExecutor.from_agent_and_tools(
+    #     agent=agent,
+    #     tools=tools,
+    #     callback_manager=agent_cb_manager,
+    #     memory=memory,
+    #     verbose=True,
+    # )
+    return agent_excutor
