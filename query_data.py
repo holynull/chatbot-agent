@@ -110,8 +110,10 @@ def get_agent(
         agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, 
         verbose=True, memory=memory,
         callback_manager=agent_cb_manager,
-        system_message=PREFIX,
-        human_message="I'm a user of swft and metapath.",
+        # system_message=PREFIX,
+        # human_message="I'm a user of swft and metapath.",
+        prefix=PREFIX,
+        # suffix=suffix,
     )
     # agent=ConversationalChatAgent.from_llm_and_tools(
     #     llm=llm,
