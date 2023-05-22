@@ -107,7 +107,7 @@ def get_agent(
     agent_excutor = initialize_agent(
         tools=tools,
         llm=llm, 
-        agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, 
+        agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, 
         verbose=True, memory=memory,
         callback_manager=agent_cb_manager,
         system_message=PREFIX,
