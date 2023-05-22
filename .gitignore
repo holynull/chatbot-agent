@@ -141,3 +141,4 @@ langchain.readthedocs.io/
 **/*.csv
 *.faiss
 *.pkl
+embeddings/

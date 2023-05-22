@@ -1,6 +1,10 @@
 .PHONY: start
 start:
 	uvicorn main_pinecone:app --reload --host "" --port 9000 >> ./root.log 2>&1 & 
+start_faiss:
+	uvicorn main_faiss:app --reload --host "" --port 9000 >> ./root.log 2>&1 & 
+start_chroma:
+	uvicorn main_chroma:app --reload --host "" --port 9000 >> ./root.log 2>&1 & 
 start-map-rerank:
 	uvicorn main_pinecone:app --reload --host "" --port 9001 >> ./root.log 2>&1 & 
 start-chatbot:

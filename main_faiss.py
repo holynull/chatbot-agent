@@ -16,6 +16,10 @@ from schemas import ChatResponse
 import pinecone
 from langchain.vectorstores import Pinecone
 from langchain.embeddings import OpenAIEmbeddings
+from langchain.document_loaders import CSVLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import FAISS 
+
 
 from dotenv import load_dotenv
 import os
@@ -41,7 +45,6 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 vcs_swft: Optional[VectorStore] = None
 vcs_path: Optional[VectorStore] = None
-from langchain.vectorstores import Chroma
 
 
 @app.on_event("startup")
@@ -49,11 +52,26 @@ async def startup_event():
     logging.info("loading vectorstore")
     global vcs_swft
     global vcs_path
-    index_swft = "data-swft"
-    index_path = "data-metapath"
     embeddings = OpenAIEmbeddings(model="gpt-4")
-    vcs_swft = Pinecone.from_existing_index(index_swft, embeddings)
-    vcs_path = Pinecone.from_existing_index(index_path, embeddings)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200,
+    )
+
+    loader_swft = CSVLoader(file_path=script_location / 'embeddings/swft_faq.csv')
+    raw_documents_swft = loader_swft.load()
+    docs_swft = text_splitter.split_documents(raw_documents_swft)
+    vcs_swft=FAISS.from_documents(documents=docs_swft,embedding=embeddings)
+    # vcs_swft=Chroma.from_documents(documents=docs_swft,embedding=embeddings,persist_directory=f'{script_location}/chroma/swft')
+    # vcs_swft.persist()
+
+    loader_path = CSVLoader(file_path=script_location / 'embeddings/path_faq.csv')
+    raw_documents_path = loader_path.load()
+    docs_path = text_splitter.split_documents(raw_documents_path)
+    vcs_path=FAISS.from_documents(documents=docs_path,embedding=embeddings)
+    # vcs_path=Chroma.from_documents(documents=docs_path,embedding=embeddings,persist_directory= f'{script_location}/chroma/path')
+    # vcs_path.persist()
+
 
 
 @app.get("/")
