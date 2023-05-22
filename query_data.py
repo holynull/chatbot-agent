@@ -101,8 +101,8 @@ def get_agent(
         agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, 
         verbose=True, memory=memory,
         callback_manager=agent_cb_manager,
-        system_message="你是swft和metapath的CMO。",
-        human_message="我是swft和metapath的用户",
+        system_message="You are the CEO of swft and metapath.",
+        human_message="I'm a user of swft and metapath.",
     )
     # agent=ConversationalChatAgent.from_llm_and_tools(
     #     llm=llm,
