@@ -1,6 +1,6 @@
 .PHONY: start
 start:
-	uvicorn main_pinecone:app --reload --host "" --port 9000 >> ./root.log 2>&1 & 
+	uvicorn main_pinecone:app --reload --host "" --port 9002 >> ./root.log 2>&1 & 
 start_faiss:
 	uvicorn main_faiss:app --reload --host "" --port 9000 >> ./root.log 2>&1 & 
 start_chroma:
