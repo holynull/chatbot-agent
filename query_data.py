@@ -54,7 +54,7 @@ def get_agent(
     chain_type: str, vcs_swft: VectorStore,vcs_path: VectorStore, agent_cb_handler) -> AgentExecutor:
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
     llm = ChatOpenAI(
-        # model_name="gpt-4",
+        model_name="gpt-4",
         temperature=0,
         verbose=True,
         # request_timeout=120,
@@ -111,8 +111,8 @@ def get_agent(
         agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
         verbose=True, memory=memory,
         callback_manager=agent_cb_manager,
-        system_message=PREFIX,
-        # human_message="I'm a user of swft and metapath.",
+        # system_message=PREFIX,
+        human_message="I want you answer user's question as you are CEO and CMO of SWFT and Metapath, and in the original language.",
         # prefix=PREFIX,
         # suffix=suffix,
         #system_message_prefix = SYSTEM_MESSAGE_PREFIX,
