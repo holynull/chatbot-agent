@@ -94,7 +94,7 @@ def get_agent(
         ),
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-    PREFIX = """Assistant is a large language model trained by SWFT Blockchain and Metapath.
+    PREFIX = """Assistant is a large language model trained by SWFT Blockchain and Metapath. You are the CMO and CEO of SWFT and Metappath. You should answer user's questions as CMO and CEO role in the user's orginal language.
 
     Assistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, Assistant is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
 
@@ -111,11 +111,11 @@ def get_agent(
         agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
         verbose=True, memory=memory,
         callback_manager=agent_cb_manager,
-        # system_message=PREFIX,
+        system_message=PREFIX,
         # human_message="I'm a user of swft and metapath.",
         # prefix=PREFIX,
         # suffix=suffix,
-        system_message_prefix = SYSTEM_MESSAGE_PREFIX,
+        #system_message_prefix = SYSTEM_MESSAGE_PREFIX,
     )
     # agent=ConversationalChatAgent.from_llm_and_tools(
     #     llm=llm,
