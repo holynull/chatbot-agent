@@ -13,6 +13,8 @@ from langchain.chains.llm import LLMChain
 from langchain.chains.chat_vector_db.prompts import CONDENSE_QUESTION_PROMPT
 from langchain.chains.question_answering import load_qa_chain
 from langchain.agents.conversational_chat.base import ConversationalChatAgent
+from langchain.chains import APIChain
+from chain import all_templates
 
 def get_qa_chain(
     chain_type: str, vectorstore: VectorStore
@@ -54,7 +56,7 @@ def get_agent(
     chain_type: str, vcs_swft: VectorStore,vcs_path: VectorStore, agent_cb_handler) -> AgentExecutor:
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
     llm = ChatOpenAI(
-        # model_name="gpt-4",
+        model_name="gpt-4",
         temperature=0,
         verbose=True,
         # request_timeout=120,
@@ -70,7 +72,18 @@ def get_agent(
     # doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
     # zapier = ZapierNLAWrapper()
     # toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': os.getenv("CMC_API_KEY"),
+    }
+    cmc_quotes_api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,verbose=True)
     tools = [
+        Tool(
+            name = "Quotes and Price System",
+            func=cmc_quotes_api.run,
+            description="当你需要查询加密货币行情或者加密货币价格时，可以使用这个工具。输入必须是一个关于查询加密货币价格或者关于加密货币行情的请求。",
+            coroutine=cmc_quotes_api.arun
+        ),
         Tool(
             name = "QA SWFT System",
             func=doc_search_swft.run,
