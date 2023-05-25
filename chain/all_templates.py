@@ -98,8 +98,8 @@ Plan credit use: 1 call credit per 100 cryptocurrencies returned (rounded up) an
 CMC equivalent pages: Latest market data pages for specific cryptocurrencies like coinmarketcap.com/currencies/bitcoin/.
 
 NOTE: Use this endpoint to request the latest quote for specific cryptocurrencies. If you need to request all cryptocurrencies use /v1/cryptocurrency/listings/latest which is optimized for that purpose. The response data between these endpoints is otherwise the same.
-
 PARAMETERS:
+apikey: is not allowed
 id:
 	Type: string
     One or more comma-separated cryptocurrency CoinMarketCap IDs. Example: 1,2
@@ -115,7 +115,7 @@ convert:
 convert_id:
 	Type: string
     Optionally calculate market quotes by CoinMarketCap ID instead of symbol. This option is identical to convert outside of ID format. Ex: convert_id=1,2781 would replace convert=BTC,USD in your query. This parameter cannot be used when convert is used.
-aux: Optionally specify a comma-separated list of supplemental data fields to return. Pass num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,market_cap_by_total_supply,volume_24h_reported,volume_7d,volume_7d_reported,volume_30d,volume_30d_reported,is_active,is_fiat to include all auxiliary fields.
+aux: should only include one or more comma-separated values from [num_market_pairs, cmc_rank, date_added, tags, platform, max_supply, circulating_supply, total_supply, market_cap_by_total_supply, volume_24h_reported, volume_7d, volume_7d_reported, volume_30d, volume_30d_reported, is_active, is_fiat]. Optionally specify a comma-separated list of supplemental data fields to return. Pass num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,market_cap_by_total_supply,volume_24h_reported,volume_7d,volume_7d_reported,volume_30d,volume_30d_reported,is_active,is_fiat to include all auxiliary fields.
 
 RESPONSE
 200 Successful

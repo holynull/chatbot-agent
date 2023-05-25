@@ -15,18 +15,24 @@ from langchain.prompts.base import BasePromptTemplate
 from langchain.prompts import PromptTemplate
 import all_templates
 
+prompt=PromptTemplate(template=all_templates.quotes_chain_template,input_variables=["user_input"])
+
 class CMCQuotesChain(Chain):
     """
     An example of a custom chain.
     """
 
-    prompt: BasePromptTemplate
+    prompt: BasePromptTemplate=prompt
     """Prompt object to use."""
     llm: BaseLanguageModel
     output_key: str = "text"  #: :meta private:
+    
+    cmc_quotes_api:APIChain 
 
-    cmc_currency_map_api: APIChain
-    cmc_quotes_api: APIChain
+    @classmethod
+    def from_llm(cls,llm:BaseLanguageModel,headers:dict,**kwargs: Any,)->CMCQuotesChain:
+        api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
+        return cls(llm=llm,cmc_quotes_api=api,**kwargs)
 
     class Config:
         """Configuration for this pydantic object."""
@@ -73,16 +79,16 @@ class CMCQuotesChain(Chain):
         # methods on the `run_manager`, as shown below. This will trigger any
         # callbacks that are registered for that event.
         if run_manager:
-            run_manager.on_text("Log something about this run")
+            run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
 
         if response.generations[0][0].text!="NAN":
-            # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
-            # question=template.format(question=response.generations[0][0].text)
+            template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
+            question=template.format(question=response.generations[0][0].text)
             # print(f"Question: {question}")
             # json=self.cmc_currency_map_api.run(question)
             # print(f"Json: {json}")
             template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
-            p=template2.format(question=response.generations[0][0].text)
+            p=template2.format(question=question)
             res=self.cmc_quotes_api.run(p) 
             return {self.output_key: res}
         else:
