@@ -76,30 +76,12 @@ RESPONSE SCHEMA
     
 """
 
-cmc_quote_lastest_api_doc=""""
+cmc_quote_lastest_api_doc="""
 Base URL: https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest
 
-Quotes Latest v2
-
+Quotes Latest v2 API Documentation
 Returns the latest market quote for 1 or more cryptocurrencies. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
-
-Please note: This documentation relates to our updated V2 endpoint, which may be incompatible with our V1 versions. Documentation for deprecated endpoints can be found here.
-
-This endpoint is available on the following API plans:
-
-Basic
-Startup
-Hobbyist
-Standard
-Professional
-Enterprise
-Cache / Update frequency: Every 60 seconds.
-Plan credit use: 1 call credit per 100 cryptocurrencies returned (rounded up) and 1 call credit per convert option beyond the first.
-CMC equivalent pages: Latest market data pages for specific cryptocurrencies like coinmarketcap.com/currencies/bitcoin/.
-
-NOTE: Use this endpoint to request the latest quote for specific cryptocurrencies. If you need to request all cryptocurrencies use /v1/cryptocurrency/listings/latest which is optimized for that purpose. The response data between these endpoints is otherwise the same.
 PARAMETERS:
-apikey: is not allowed
 id:
 	Type: string
     One or more comma-separated cryptocurrency CoinMarketCap IDs. Example: 1,2
@@ -116,147 +98,24 @@ convert_id:
 	Type: string
     Optionally calculate market quotes by CoinMarketCap ID instead of symbol. This option is identical to convert outside of ID format. Ex: convert_id=1,2781 would replace convert=BTC,USD in your query. This parameter cannot be used when convert is used.
 aux: should only include one or more comma-separated values from [num_market_pairs, cmc_rank, date_added, tags, platform, max_supply, circulating_supply, total_supply, market_cap_by_total_supply, volume_24h_reported, volume_7d, volume_7d_reported, volume_30d, volume_30d_reported, is_active, is_fiat]. Optionally specify a comma-separated list of supplemental data fields to return. Pass num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,market_cap_by_total_supply,volume_24h_reported,volume_7d,volume_7d_reported,volume_30d,volume_30d_reported,is_active,is_fiat to include all auxiliary fields.
-
-RESPONSE
-200 Successful
-id: The unique CoinMarketCap ID for this cryptocurrency.
-name: The name of this cryptocurrency.
-symbol: The ticker symbol for this cryptocurrency.
-slug: The web URL friendly shorthand version of this cryptocurrency name.
-cmc_rank: The cryptocurrency's CoinMarketCap rank by market cap.
-num_market_pairs: The number of active trading pairs available for this cryptocurrency across supported exchanges.
-circulating_supply: The approximate number of coins circulating for this cryptocurrency.
-total_supply: The approximate total amount of coins in existence right now (minus any coins that have been verifiably burned).
-market_cap_by_total_supply: The market cap by total supply. This field is only returned if requested through the aux request parameter.
-max_supply: The expected maximum limit of coins ever to be available for this cryptocurrency.
-date_added: Timestamp (ISO 8601) of when this cryptocurrency was added to CoinMarketCap.
-tags: Array of tags associated with this cryptocurrency. Currently only a mineable tag will be returned if the cryptocurrency is mineable. Additional tags will be returned in the future.
-platform: Metadata about the parent cryptocurrency platform this cryptocurrency belongs to if it is a token, otherwise null.
-self_reported_circulating_supply: The self reported number of coins circulating for this cryptocurrency.
-self_reported_market_cap: The self reported market cap for this cryptocurrency.
-quote: A map of market quotes in different currency conversions. The default map included is USD.
-price: Price in the specified currency.
-volume_24h: Rolling 24 hour adjusted volume in the specified currency.
-volume_change_24h: 24 hour change in the specified currencies volume.
-volume_24h_reported: Rolling 24 hour reported volume in the specified currency. This field is only returned if requested through the aux request parameter.
-
- volume_7d	
-number
-Rolling 7 day adjusted volume in the specified currency. This field is only returned if requested through the aux request parameter.
-
- volume_7d_reported	
-number
-Rolling 7 day reported volume in the specified currency. This field is only returned if requested through the aux request parameter.
-
- volume_30d	
-number
-Rolling 30 day adjusted volume in the specified currency. This field is only returned if requested through the aux request parameter.
-
- volume_30d_reported	
-number
-Rolling 30 day reported volume in the specified currency. This field is only returned if requested through the aux request parameter.
-
- market_cap	
-number
-Market cap in the specified currency.
-
- market_cap_dominance	
-number
-Market cap dominance in the specified currency.
-
- fully_diluted_market_cap	
-number
-Fully diluted market cap in the specified currency.
-
- percent_change_1h	
-number
-1 hour change in the specified currency.
-
- percent_change_24h	
-number
-24 hour change in the specified currency.
-
- percent_change_7d	
-number
-7 day change in the specified currency.
-
- percent_change_30d	
-number
-30 day change in the specified currency.
-RESPONSE SCHEMA Sample
-{{
-{
-"data": {
-"1": {
-"id": 1,
-"name": "Bitcoin",
-"symbol": "BTC",
-"slug": "bitcoin",
-"is_active": 1,
-"is_fiat": 0,
-"circulating_supply": 17199862,
-"total_supply": 17199862,
-"max_supply": 21000000,
-"date_added": "2013-04-28T00:00:00.000Z",
-"num_market_pairs": 331,
-"cmc_rank": 1,
-"last_updated": "2018-08-09T21:56:28.000Z",
-"tags": [
-"mineable"
-],
-"platform": null,
-"self_reported_circulating_supply": null,
-"self_reported_market_cap": null,
-"quote": {
-"USD": {
-"price": 6602.60701122,
-"volume_24h": 4314444687.5194,
-"volume_change_24h": -0.152774,
-"percent_change_1h": 0.988615,
-"percent_change_24h": 4.37185,
-"percent_change_7d": -12.1352,
-"percent_change_30d": -12.1352,
-"market_cap": 852164659250.2758,
-"market_cap_dominance": 51,
-"fully_diluted_market_cap": 952835089431.14,
-"last_updated": "2018-08-09T21:56:28.000Z"
-}
-}
-}
-},
-"status": {
-"timestamp": "2023-05-12T03:15:06.491Z",
-"error_code": 0,
-"error_message": "",
-"elapsed": 10,
-"credit_count": 1,
-"notice": ""
-}
-}
-}}
-400 Bad request
-RESPONSE SCHEMA Sample
-{{
-{
-"status": {
-"timestamp": "2018-06-02T22:51:28.209Z",
-"error_code": 400,
-"error_message": "Invalid value for \"id\"",
-"elapsed": 10,
-"credit_count": 0
-}
-}
-}}
 """
 
 quotes_chain_template="""
-如果用户的输入不能生成一个查询某种加密货币或者某种加密资产行情的请求，请回答NAN。
-否则，请在最后面补充上这个请求。
+请根据用户输入的信息，生成一个有关加密货币或者加密资产相关的查询请求。
 用户输入：{user_input}
 """
 
+consider_can_answer_the_question_template="""
+请根据请求，考虑按照API文档实现的接口是否有可能完成请求。如果有可能请回答YES。如果完全不可能，只回答出原因即可。
+
+API文档：
+{api_docs}
+
+请求：{question}
+"""
+
 cc_map_api_template="""
-请查询用户提问中涉及到的数字资产或者数字货币的symbol和id。在最后面以json的格式回答。
+请查询用户提问中涉及到的数字资产或者数字货币的symbol和id。
 用户提问：{question}
 """
 

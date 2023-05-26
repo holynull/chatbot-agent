@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
+from langchain import LLMChain
 
 from pydantic import Extra
 
@@ -26,13 +27,12 @@ class CMCQuotesChain(Chain):
     """Prompt object to use."""
     llm: BaseLanguageModel
     output_key: str = "text"  #: :meta private:
+
+    consider_chain:LLMChain
     
     cmc_quotes_api:APIChain 
 
-    @classmethod
-    def from_llm(cls,llm:BaseLanguageModel,headers:dict,**kwargs: Any,)->CMCQuotesChain:
-        api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
-        return cls(llm=llm,cmc_quotes_api=api,**kwargs)
+    
 
     class Config:
         """Configuration for this pydantic object."""
@@ -80,19 +80,26 @@ class CMCQuotesChain(Chain):
         # callbacks that are registered for that event.
         if run_manager:
             run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
-
-        if response.generations[0][0].text!="NAN":
-            template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
-            question=template.format(question=response.generations[0][0].text)
-            # print(f"Question: {question}")
+        consider=self.consider_chain.run(question=response.generations[0][0].text,api_docs=all_templates.cmc_quote_lastest_api_doc)
+        if run_manager:
+            run_manager.on_text(consider, color="yellow", end="\n", verbose=self.verbose) 
+        if consider=="YES":
+            question=response.generations[0][0].text
+            # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
+            # question=template.format(question=response.generations[0][0].text)
+            # if run_manager:
+            #     run_manager.on_text(question, color="yellow", end="\n", verbose=self.verbose)
             # json=self.cmc_currency_map_api.run(question)
             # print(f"Json: {json}")
             template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
             p=template2.format(question=question)
-            res=self.cmc_quotes_api.run(p) 
-            return {self.output_key: res}
+            try:
+                res=self.cmc_quotes_api.run(p) 
+                return {self.output_key: res}
+            except Exception as err:
+                return {self.output_key: err.args}
         else:
-            return {self.output_key: response.generations[0][0].text}
+            return {self.output_key: consider}
         
 
     async def _acall(
@@ -118,10 +125,56 @@ class CMCQuotesChain(Chain):
         # methods on the `run_manager`, as shown below. This will trigger any
         # callbacks that are registered for that event.
         if run_manager:
-            await run_manager.on_text("Log something about this run")
-        
-        return {self.output_key: response.generations[0][0].text}
+            await run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
+        consider=self.consider_chain.run(question=response.generations[0][0].text,api_docs=all_templates.cmc_quote_lastest_api_doc)
+        if run_manager:
+            await run_manager.on_text(consider, color="yellow", end="\n", verbose=self.verbose) 
+        if consider=="YES":
+            question=response.generations[0][0].text
+            # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
+            # question=template.format(question=response.generations[0][0].text)
+            # if run_manager:
+            #     run_manager.on_text(question, color="yellow", end="\n", verbose=self.verbose)
+            # json=self.cmc_currency_map_api.run(question)
+            # print(f"Json: {json}")
+            template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
+            p=template2.format(question=question)
+            try:
+                res=await self.cmc_quotes_api.run(p) 
+                return {self.output_key: res}
+            except Exception as err:
+                return {self.output_key: err.args}
+        else:
+            return {self.output_key: consider}
 
     @property
     def _chain_type(self) -> str:
-        return "my_custom_chain"
+        return "cmc_quotes_chain"
+    
+    @classmethod
+    def from_llm(cls,llm:BaseLanguageModel,headers:dict,**kwargs: Any,)->CMCQuotesChain:
+        API_URL_PROMPT_TEMPLATE = """You are given the below API Documentation:
+        {api_docs}
+        Using this documentation, generate the full API url to call for answering the user question.
+        You should build the API url in order to get a response that is as short as possible, while still getting the necessary information to answer the question. Pay attention to deliberately exclude any unnecessary pieces of data in the API call.
+        Don't use parameter apikey.
+        Parameter aux should be one or more in num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,market_cap_by_total_supply,volume_24h_reported,volume_7d,volume_7d_reported,volume_30d,volume_30d_reported,is_active,is_fiat
+
+        Question:{question}
+        API url:"""
+
+        API_URL_PROMPT = PromptTemplate(
+            input_variables=[
+                "api_docs",
+                "question",
+            ],
+            template=API_URL_PROMPT_TEMPLATE,
+        )
+        api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,api_url_prompt=API_URL_PROMPT,headers=headers,**kwargs)
+        # api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
+        consider_prompt=PromptTemplate(
+            input_variables=["api_docs","question"],
+            template=all_templates.consider_can_answer_the_question_template
+        )
+        consider=LLMChain(llm=llm,prompt=consider_prompt,**kwargs)
+        return cls(llm=llm,cmc_quotes_api=api,consider_chain=consider,**kwargs)

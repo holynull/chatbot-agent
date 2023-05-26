@@ -15,6 +15,7 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.agents.conversational_chat.base import ConversationalChatAgent
 from langchain.chains import APIChain
 from chain import all_templates
+from chain.cmc_quotes_chain import CMCQuotesChain
 
 def get_qa_chain(
     chain_type: str, vectorstore: VectorStore
@@ -67,8 +68,8 @@ def get_agent(
         # request_timeout=120,
     ) 
     search = GoogleSerperAPIWrapper()
-    doc_search_swft = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_swft.as_retriever())
-    doc_search_path = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_path.as_retriever())
+    doc_search_swft = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_swft.as_retriever(),verbose=True)
+    doc_search_path = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_path.as_retriever(),verbose=True)
     # doc_search = get_qa_chain(chain_type=chain_type,vectorstore=vectorstore) 
     # zapier = ZapierNLAWrapper()
     # toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
@@ -76,7 +77,8 @@ def get_agent(
         'Accepts': 'application/json',
         'X-CMC_PRO_API_KEY': os.getenv("CMC_API_KEY"),
     }
-    cmc_quotes_api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,verbose=True)
+    # cmc_quotes_api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,verbose=True)
+    cmc_quotes_api=CMCQuotesChain.from_llm(llm=llm,headers=headers,verbose=True)
     tools = [
         Tool(
             name = "Quotes and Price System",
