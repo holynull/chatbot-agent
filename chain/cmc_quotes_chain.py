@@ -157,7 +157,6 @@ class CMCQuotesChain(Chain):
         API_URL_PROMPT_TEMPLATE = """You are given the below API Documentation:
         {api_docs}
         Using this documentation, generate the full API url to call for answering the user question.
-        You should build the API url in order to get a response that is as short as possible. Pay attention to deliberately exclude any unnecessary pieces of data in the API call.
         Question:{question}
         API url:"""
 
