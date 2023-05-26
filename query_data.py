@@ -83,7 +83,7 @@ def get_agent(
         Tool(
             name = "Quotes and Price System",
             func=cmc_quotes_api.run,
-            description="When you need to inquire about the latest cryptocurrency market trends or the latest cryptocurrency prices, you can use this tool.",
+            description="When you need to inquire about the latest cryptocurrency market trends or the latest cryptocurrency prices, you can use this tool. Input should be a fully formed question.",
             coroutine=cmc_quotes_api.arun
         ),
         Tool(
