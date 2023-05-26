@@ -115,7 +115,9 @@ tags: Array of tags associated with this cryptocurrency. Currently only a mineab
 platform: Metadata about the parent cryptocurrency platform this cryptocurrency belongs to if it is a token, otherwise null.
 self_reported_circulating_supply: The self reported number of coins circulating for this cryptocurrency.
 self_reported_market_cap: The self reported market cap for this cryptocurrency.
-quote: A map of market quotes in different currency conversions. The default map included is USD.
+quote: A map of market quotes in different currency conversions. The default map included is USD. See the flow Quote Map Instructions.
+
+Quote Map Instructions:
 price: Price in the specified currency.
 volume_24h: Rolling 24 hour adjusted volume in the specified currency.
 volume_change_24h: 24 hour change in the specified currencies volume.
