@@ -154,22 +154,22 @@ class CMCQuotesChain(Chain):
     
     @classmethod
     def from_llm(cls,llm:BaseLanguageModel,headers:dict,**kwargs: Any,)->CMCQuotesChain:
-        API_URL_PROMPT_TEMPLATE = """You are given the below API Documentation:
-        {api_docs}
-        Using this documentation, generate the full API url to call for answering the user question.
-        You should build the API url in order to get a response that is as short as possible. Pay attention to deliberately exclude any unnecessary pieces of data in the API call.
-        You should not build API url with the word "aux".
-        Question:{question}
-        API url:"""
+        # API_URL_PROMPT_TEMPLATE = """You are given the below API Documentation:
+        # {api_docs}
+        # Using this documentation, generate the full API url to call for answering the user question.
+        # You should build the API url in order to get a response that is as short as possible. Pay attention to deliberately exclude any unnecessary pieces of data in the API call.
+        # You should not build API url with the word "aux".
+        # Question:{question}
+        # API url:"""
 
-        API_URL_PROMPT = PromptTemplate(
-            input_variables=[
-                "api_docs",
-                "question",
-            ],
-            template=API_URL_PROMPT_TEMPLATE,
-        )
-        api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,api_url_prompt=API_URL_PROMPT,headers=headers,**kwargs)
+        # API_URL_PROMPT = PromptTemplate(
+        #     input_variables=[
+        #         "api_docs",
+        #         "question",
+        #     ],
+        #     template=API_URL_PROMPT_TEMPLATE,
+        # )
+        api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
         # api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
         consider_prompt=PromptTemplate(
             input_variables=["api_docs","question"],
