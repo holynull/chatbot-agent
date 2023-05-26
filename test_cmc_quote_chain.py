@@ -1,9 +1,9 @@
 import os
 from dotenv import load_dotenv
-import cmc_quotes_chain 
+from chain import cmc_quotes_chain 
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import APIChain
-import all_templates
+import chain.all_templates
 from langchain.prompts import PromptTemplate
 
 

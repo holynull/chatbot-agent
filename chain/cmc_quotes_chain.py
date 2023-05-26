@@ -14,7 +14,8 @@ from langchain.chains.base import Chain
 from langchain.chains import APIChain
 from langchain.prompts.base import BasePromptTemplate
 from langchain.prompts import PromptTemplate
-import all_templates
+
+from chain import all_templates
 
 prompt=PromptTemplate(template=all_templates.quotes_chain_template,input_variables=["user_input"])
 
