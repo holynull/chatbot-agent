@@ -58,12 +58,12 @@ def get_agent(
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
     llm = ChatOpenAI(
         model_name="gpt-4",
-        temperature=0.1,
+        temperature=0.9,
         verbose=True,
         # request_timeout=120,
     )
     llm_qa = ChatOpenAI(
-        temperature=0.1,
+        temperature=0.9,
         verbose=True,
         # request_timeout=120,
     ) 
