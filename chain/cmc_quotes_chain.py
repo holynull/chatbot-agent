@@ -158,8 +158,8 @@ class CMCQuotesChain(Chain):
         {api_docs}
         Using this documentation, generate the full API url to call for answering the user question.
         You should build the API url in order to get a response that is as short as possible, while still getting the necessary information to answer the question. Pay attention to deliberately exclude any unnecessary pieces of data in the API call.
-        Don't use parameter apikey.
-        Parameter aux should only include one or more comma-separated values from [num_market_pairs, cmc_rank, date_added, tags, platform, max_supply, circulating_supply, total_supply, market_cap_by_total_supply, volume_24h_reported, volume_7d, volume_7d_reported, volume_30d, volume_30d_reported, is_active, is_fiat] 
+        Don't use parameter apikey in API url.
+        Parameter aux of API url should only include one or more comma-separated values from [num_market_pairs, cmc_rank, date_added, tags, platform, max_supply, circulating_supply, total_supply, market_cap_by_total_supply, volume_24h_reported, volume_7d, volume_7d_reported, volume_30d, volume_30d_reported, is_active, is_fiat] 
         Question:{question}
         API url:"""
 
