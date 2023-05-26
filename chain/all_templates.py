@@ -77,7 +77,7 @@ RESPONSE SCHEMA
 """
 
 cmc_quote_lastest_api_doc="""
-Base URL: https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest
+Base URL: https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?aux=num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,is_active,is_fiat
 
 Quotes Latest v2 API Documentation
 Returns the latest market quote for 1 or more cryptocurrencies. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
