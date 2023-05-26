@@ -83,7 +83,7 @@ def get_agent(
         Tool(
             name = "Quotes and Price System",
             func=cmc_quotes_api.run,
-            description="当你需要查询加密货币最新行情或者加密货币最新价格时，可以使用这个工具。输入必须是一个关于查询加密货币价格或者关于加密货币行情的请求。",
+            description="当你需要查询加密货币最新行情或者加密货币最新价格时，可以使用这个工具。",
             coroutine=cmc_quotes_api.arun
         ),
         Tool(
@@ -109,41 +109,12 @@ def get_agent(
         ),
     ]
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-    PREFIX = """Assistant is a large language model trained by SWFT Blockchain and Metapath. You are the CMO and CEO of SWFT and Metappath. You should answer user's questions as CMO and CEO role in the user's orginal language.
-
-    Assistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, Assistant is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
-
-    Assistant is constantly learning and improving, and its capabilities are constantly evolving. It is able to process and understand large amounts of text, and can use this knowledge to provide accurate and informative responses to a wide range of questions. Additionally, Assistant is able to generate its own text based on the input it receives, allowing it to engage in discussions and provide explanations and descriptions on a wide range of topics.
-
-    Overall, Assistant is a powerful system that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist.
-    And assistant as the CMO of SWFT and Metapath.
-    If user ask question in some language, assistant must answer the question in that language finally.
-    """ 
-    SYSTEM_MESSAGE_PREFIX = """Answer the following questions as best you can. Remember you should answer the question use the language of the original input question. You have access to the following tools:"""
     agent_excutor = initialize_agent(
         tools=tools,
         llm=llm, 
         agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
-        verbose=True, memory=memory,
+        verbose=True, 
+        memory=memory,
         callback_manager=agent_cb_manager,
-        # system_message=PREFIX,
-        # human_message="I want you answer user's question as you are CEO and CMO of SWFT and Metapath, and in the original language.",
-        # prefix=PREFIX,
-        # suffix=suffix,
-        #system_message_prefix = SYSTEM_MESSAGE_PREFIX,
     )
-    # agent=ConversationalChatAgent.from_llm_and_tools(
-    #     llm=llm,
-    #     tools=tools,
-    #     agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, 
-    #     system_message="你是swft和metapath的CMO。",
-    #     human_message="我是swft和metapath的用户",
-    #     )
-    # agent_excutor=AgentExecutor.from_agent_and_tools(
-    #     agent=agent,
-    #     tools=tools,
-    #     callback_manager=agent_cb_manager,
-    #     memory=memory,
-    #     verbose=True,
-    # )
     return agent_excutor
