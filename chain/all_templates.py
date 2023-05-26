@@ -98,6 +98,39 @@ convert_id:
 	Type: string
     Optionally calculate market quotes by CoinMarketCap ID instead of symbol. This option is identical to convert outside of ID format. Ex: convert_id=1,2781 would replace convert=BTC,USD in your query. This parameter cannot be used when convert is used.
 aux: should only include one or more comma-separated values from [num_market_pairs, cmc_rank, date_added, tags, platform, max_supply, circulating_supply, total_supply, market_cap_by_total_supply, volume_24h_reported, volume_7d, volume_7d_reported, volume_30d, volume_30d_reported, is_active, is_fiat]. Optionally specify a comma-separated list of supplemental data fields to return. Pass num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,market_cap_by_total_supply,volume_24h_reported,volume_7d,volume_7d_reported,volume_30d,volume_30d_reported,is_active,is_fiat to include all auxiliary fields.
+
+RESPONSE
+id: The unique CoinMarketCap ID for this cryptocurrency.
+name: The name of this cryptocurrency.
+symbol: The ticker symbol for this cryptocurrency.
+slug: The web URL friendly shorthand version of this cryptocurrency name.
+cmc_rank: The cryptocurrency's CoinMarketCap rank by market cap.
+num_market_pairs: The number of active trading pairs available for this cryptocurrency across supported exchanges.
+circulating_supply: The approximate number of coins circulating for this cryptocurrency.
+total_supply: The approximate total amount of coins in existence right now (minus any coins that have been verifiably burned).
+market_cap_by_total_supply: The market cap by total supply. This field is only returned if requested through the aux request parameter.
+max_supply: The expected maximum limit of coins ever to be available for this cryptocurrency.
+date_added: Timestamp (ISO 8601) of when this cryptocurrency was added to CoinMarketCap.
+tags: Array of tags associated with this cryptocurrency. Currently only a mineable tag will be returned if the cryptocurrency is mineable. Additional tags will be returned in the future.
+platform: Metadata about the parent cryptocurrency platform this cryptocurrency belongs to if it is a token, otherwise null.
+self_reported_circulating_supply: The self reported number of coins circulating for this cryptocurrency.
+self_reported_market_cap: The self reported market cap for this cryptocurrency.
+quote: A map of market quotes in different currency conversions. The default map included is USD.
+price: Price in the specified currency.
+volume_24h: Rolling 24 hour adjusted volume in the specified currency.
+volume_change_24h: 24 hour change in the specified currencies volume.
+volume_24h_reported: Rolling 24 hour reported volume in the specified currency. This field is only returned if requested through the aux request parameter.
+volume_7d: Rolling 7 day adjusted volume in the specified currency. This field is only returned if requested through the aux request parameter.
+volume_7d_reported: Rolling 7 day reported volume in the specified currency. This field is only returned if requested through the aux request parameter.
+volume_30d: Rolling 30 day adjusted volume in the specified currency. This field is only returned if requested through the aux request parameter.
+volume_30d_reported: Rolling 30 day reported volume in the specified currency. This field is only returned if requested through the aux request parameter.
+market_cap: Market cap in the specified currency.
+market_cap_dominance: Market cap dominance in the specified currency.
+fully_diluted_market_cap: Fully diluted market cap in the specified currency.
+percent_change_1h: 1 hour change in the specified currency.
+percent_change_24h: 24 hour change in the specified currency.
+percent_change_7d: 7 day change in the specified currency.
+percent_change_30d: 30 day change in the specified currency.
 """
 
 quotes_chain_template="""
