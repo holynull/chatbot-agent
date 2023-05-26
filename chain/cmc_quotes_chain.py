@@ -127,7 +127,7 @@ class CMCQuotesChain(Chain):
         # callbacks that are registered for that event.
         if run_manager:
             await run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
-        consider=self.consider_chain.run(question=response.generations[0][0].text,api_docs=all_templates.cmc_quote_lastest_api_doc)
+        consider=await self.consider_chain.arun(question=response.generations[0][0].text,api_docs=all_templates.cmc_quote_lastest_api_doc)
         if run_manager:
             await run_manager.on_text(consider, color="yellow", end="\n", verbose=self.verbose) 
         if consider=="YES":
@@ -141,7 +141,7 @@ class CMCQuotesChain(Chain):
             template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
             p=template2.format(question=question)
             try:
-                res=await self.cmc_quotes_api.run(p) 
+                res=await self.cmc_quotes_api.arun(p) 
                 return {self.output_key: res}
             except Exception as err:
                 return {self.output_key: err.args}
