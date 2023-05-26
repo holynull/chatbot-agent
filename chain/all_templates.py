@@ -106,7 +106,7 @@ quotes_chain_template="""
 """
 
 consider_can_answer_the_question_template="""
-请根据请求，考虑按照API文档实现的接口是否有可能完成请求。如果有可能请回答YES。如果完全不可能，只回答出原因即可。
+请根据请求，考虑按照API文档实现的接口是否有可能完成请求。如果有可能，请回答并且只回答YES即可。如果完全不可能，只回答出原因即可。
 
 API文档：
 {api_docs}
