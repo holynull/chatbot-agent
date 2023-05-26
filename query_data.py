@@ -83,7 +83,7 @@ def get_agent(
         Tool(
             name = "Quotes and Price System",
             func=cmc_quotes_api.run,
-            description="当你需要查询加密货币行情或者加密货币价格时，可以使用这个工具。输入必须是一个关于查询加密货币价格或者关于加密货币行情的请求。",
+            description="当你需要查询加密货币最新行情或者加密货币最新价格时，可以使用这个工具。输入必须是一个关于查询加密货币价格或者关于加密货币行情的请求。",
             coroutine=cmc_quotes_api.arun
         ),
         Tool(
