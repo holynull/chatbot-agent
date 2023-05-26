@@ -89,13 +89,13 @@ def get_agent(
         Tool(
             name = "QA SWFT System",
             func=doc_search_swft.run,
-            description="useful for when you need to answer questions about swft. Input should be a fully formed question.",
+            description="useful for when you need to answer questions about swft. Input should be a fully formed question, and use the original language.",
             coroutine=doc_search_swft.arun
         ),
          Tool(
             name = "QA Metapath System",
             func=doc_search_path.run,
-            description="useful for when you need to answer questions about metapath. Input should be a fully formed question.",
+            description="useful for when you need to answer questions about metapath. Input should be a fully formed question, and use the original language.",
             coroutine=doc_search_path.arun
         ),
         Tool(
