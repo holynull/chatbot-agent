@@ -81,6 +81,7 @@ Base URL: https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest
 
 Quotes Latest v2 API Documentation
 Returns the latest market quote for 1 or more cryptocurrencies. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
+There is no need to use aux to specify a specific market data, and the returned quote contains all market data.
 PARAMETERS:
 id:
 	Type: string
