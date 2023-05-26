@@ -77,27 +77,18 @@ RESPONSE SCHEMA
 """
 
 cmc_quote_lastest_api_doc="""
-Base URL: https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?aux=num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,is_active,is_fiat
+Base URL: https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest
 
 Quotes Latest v2 API Documentation
 Returns the latest market quote for 1 or more cryptocurrencies. Use the "convert" option to return market values in multiple fiat and cryptocurrency conversions in the same call.
 There is no need to use aux to specify a specific market data, and the returned quote contains all market data.
+
 PARAMETERS:
-id:
-	Type: string
-    One or more comma-separated cryptocurrency CoinMarketCap IDs. Example: 1,2
-slug:
-	Type: string
-    Alternatively pass a comma-separated list of cryptocurrency slugs. Example: "bitcoin,ethereum"
-symbol:
-	Type: string
-    Alternatively pass one or more comma-separated cryptocurrency symbols. Example: "BTC,ETH". At least one "id" or "slug" or "symbol" is required for this request.
-convert:
-	Type: string
-    Optionally calculate market quotes in up to 120 currencies at once by passing a comma-separated list of cryptocurrency or fiat currency symbols. Each additional convert option beyond the first requires an additional call credit. A list of supported fiat options can be found here. Each conversion is returned in its own "quote" object.
-convert_id:
-	Type: string
-    Optionally calculate market quotes by CoinMarketCap ID instead of symbol. This option is identical to convert outside of ID format. Ex: convert_id=1,2781 would replace convert=BTC,USD in your query. This parameter cannot be used when convert is used.
+id: One or more comma-separated cryptocurrency CoinMarketCap IDs. Example: 1,2
+slug: Alternatively pass a comma-separated list of cryptocurrency slugs. Example: "bitcoin,ethereum"
+symbol: Alternatively pass one or more comma-separated cryptocurrency symbols. Example: "BTC,ETH". At least one "id" or "slug" or "symbol" is required for this request.
+convert: Optionally calculate market quotes in up to 120 currencies at once by passing a comma-separated list of cryptocurrency or fiat currency symbols. Each additional convert option beyond the first requires an additional call credit. A list of supported fiat options can be found here. Each conversion is returned in its own "quote" object.
+convert_id: Optionally calculate market quotes by CoinMarketCap ID instead of symbol. This option is identical to convert outside of ID format. Ex: convert_id=1,2781 would replace convert=BTC,USD in your query. This parameter cannot be used when convert is used.
 aux: Default "num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,is_active,is_fiat". Optionally specify a comma-separated list of supplemental data fields to return. Pass num_market_pairs,cmc_rank,date_added,tags,platform,max_supply,circulating_supply,total_supply,market_cap_by_total_supply,volume_24h_reported,volume_7d,volume_7d_reported,volume_30d,volume_30d_reported,is_active,is_fiat to include all auxiliary fields.
 
 RESPONSE
