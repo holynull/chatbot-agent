@@ -127,7 +127,7 @@ def get_agent(
         verbose=True, memory=memory,
         callback_manager=agent_cb_manager,
         # system_message=PREFIX,
-        human_message="I want you answer user's question as you are CEO and CMO of SWFT and Metapath, and in the original language.",
+        # human_message="I want you answer user's question as you are CEO and CMO of SWFT and Metapath, and in the original language.",
         # prefix=PREFIX,
         # suffix=suffix,
         #system_message_prefix = SYSTEM_MESSAGE_PREFIX,
