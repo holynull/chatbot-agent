@@ -134,6 +134,7 @@ User input: {user_input}
 
 consider_can_answer_the_question_template="""
 The following question is about requesting a query for the latest market trend of something. Please simplify this request as querying the latest market trend of that.
+You should be aware of the latest market trends, including price, 24-hour volume, 24-hour volume change, 24-hour reported volume, 7-day volume, 7-day reported volume, 30-day volume, 30-day reported volume, market cap, market cap dominance, fully diluted market cap, percent change in 1 hour, percent change in 24 hours, percent change in 7 days, and percent change in 30 days.
 Question: {question}
 """
 
