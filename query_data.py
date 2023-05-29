@@ -57,7 +57,12 @@ def get_agent(
     chain_type: str, vcs_swft: VectorStore,vcs_path: VectorStore, agent_cb_handler) -> AgentExecutor:
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
     llm = ChatOpenAI(
-        # model_name="gpt-4",
+        model_name="gpt-4",
+        temperature=0.1,
+        verbose=True,
+        # request_timeout=120,
+    )
+    llm_quotes = ChatOpenAI(
         temperature=0.1,
         verbose=True,
         # request_timeout=120,
@@ -78,7 +83,7 @@ def get_agent(
         'X-CMC_PRO_API_KEY': os.getenv("CMC_API_KEY"),
     }
     # cmc_quotes_api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,verbose=True)
-    cmc_quotes_api=CMCQuotesChain.from_llm(llm=llm,headers=headers,verbose=True)
+    cmc_quotes_api=CMCQuotesChain.from_llm(llm=llm_quotes,headers=headers,verbose=True)
     tools = [
         Tool(
             name = "Latest Quotes and Price System",
