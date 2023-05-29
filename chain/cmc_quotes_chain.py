@@ -179,7 +179,7 @@ class CMCQuotesChain(Chain):
         consider=LLMChain(llm=consider_llm,prompt=consider_prompt,**kwargs)
         answer_llm=ChatOpenAI(
             # model_name="gpt-4",
-            temperature=0.7,
+            temperature=0.9,
             # request_timeout=120,
             **kwargs
         )
