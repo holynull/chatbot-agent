@@ -159,10 +159,10 @@ class CMCQuotesChain(Chain):
             template=API_URL_PROMPT_TEMPLATE,
         )
         api_llm=ChatOpenAI(
-        model_name="gpt-4",
-        temperature=0,
-        # request_timeout=120,
-        **kwargs
+            # model_name="gpt-4",
+            temperature=0,
+            # request_timeout=120,
+            **kwargs
         )
         api=APIChain.from_llm_and_api_docs(llm=api_llm,api_docs=all_templates.cmc_quote_lastest_api_doc,api_url_prompt=API_URL_PROMPT,headers=headers,**kwargs)
         # api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
@@ -171,17 +171,17 @@ class CMCQuotesChain(Chain):
             template=all_templates.consider_what_is_the_product
         )
         consider_llm=ChatOpenAI(
-        # model_name="gpt-4",
-        temperature=0,
-        # request_timeout=120,
-        **kwargs
+            # model_name="gpt-4",
+            temperature=0,
+            # request_timeout=120,
+            **kwargs
         )
         consider=LLMChain(llm=consider_llm,prompt=consider_prompt,**kwargs)
         answer_llm=ChatOpenAI(
-        model_name="gpt-4",
-        temperature=0.7,
-        # request_timeout=120,
-        **kwargs
+            # model_name="gpt-4",
+            temperature=0.7,
+            # request_timeout=120,
+            **kwargs
         )
         answer_template=PromptTemplate(
             input_variables=["context","question"],

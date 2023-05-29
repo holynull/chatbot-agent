@@ -63,7 +63,7 @@ def get_agent(
         # request_timeout=120,
     )
     llm_quotes = ChatOpenAI(
-        model_name="gpt-4",
+        # model_name="gpt-4",
         temperature=0,
         verbose=True,
         # request_timeout=120,
