@@ -128,17 +128,13 @@ percent_change_30d: 30 day change in the specified currency.
 """
 
 quotes_chain_template="""
-请根据用户输入的信息，生成一个有关加密货币或者加密资产相关的查询请求。
-用户输入：{user_input}
+Please create a question related to cryptocurrency or crypto assets based on the information provided by the user, and use the original language.
+User input: {user_input}
 """
 
 consider_can_answer_the_question_template="""
-请根据请求，考虑按照API文档实现的接口是否有可能完成请求。如果有可能，请回答并且只回答YES即可。如果完全不可能，只回答出原因即可。
-
-API文档：
-{api_docs}
-
-请求：{question}
+The following question is about requesting a query for the latest market trend of a certain cryptocurrency. Please simplify this request as querying the latest market trend of that cryptocurrency.
+Question: {question}
 """
 
 cc_map_api_template="""
@@ -147,7 +143,14 @@ cc_map_api_template="""
 """
 
 replace_name_to_id_template="""
-请按照用户的提问进行查询。
+Please proceed with the query according to the following question.
 
-用户提问：{question}
+Question: {question}
 """
+
+quotes_chain_answer="""Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+{context}
+
+Question: {question}
+Helpful Answer:"""

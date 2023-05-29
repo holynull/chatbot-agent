@@ -15,8 +15,8 @@ from langchain.prompts import PromptTemplate
 load_dotenv(dotenv_path= '.env')
 
 llm = ChatOpenAI(
-	model="gpt-4",
-    temperature=0.9,
+	# model="gpt-4",
+    temperature=0.1,
     verbose=True,
     )
 headers = {

@@ -14,6 +14,7 @@ from langchain.chains.base import Chain
 from langchain.chains import APIChain
 from langchain.prompts.base import BasePromptTemplate
 from langchain.prompts import PromptTemplate
+from langchain.chat_models import ChatOpenAI
 
 from chain import all_templates
 
@@ -32,6 +33,8 @@ class CMCQuotesChain(Chain):
     consider_chain:LLMChain
     
     cmc_quotes_api:APIChain 
+
+    answer_chain:LLMChain
 
     
 
@@ -81,26 +84,26 @@ class CMCQuotesChain(Chain):
         # callbacks that are registered for that event.
         if run_manager:
             run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
-        consider=self.consider_chain.run(question=response.generations[0][0].text,api_docs=all_templates.cmc_quote_lastest_api_doc)
+        original_question=response.generations[0][0].text
+        consider=self.consider_chain.run(question=original_question)
         if run_manager:
             run_manager.on_text(consider, color="yellow", end="\n", verbose=self.verbose) 
-        if consider=="YES":
-            question=response.generations[0][0].text
-            # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
-            # question=template.format(question=response.generations[0][0].text)
-            # if run_manager:
-            #     run_manager.on_text(question, color="yellow", end="\n", verbose=self.verbose)
-            # json=self.cmc_currency_map_api.run(question)
-            # print(f"Json: {json}")
-            template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
-            p=template2.format(question=question)
-            try:
-                res=self.cmc_quotes_api.run(p) 
-                return {self.output_key: res}
-            except Exception as err:
-                return {self.output_key: err.args}
-        else:
-            return {self.output_key: consider}
+        question=consider
+        # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
+        # question=template.format(question=response.generations[0][0].text)
+        # if run_manager:
+        #     run_manager.on_text(question, color="yellow", end="\n", verbose=self.verbose)
+        # json=self.cmc_currency_map_api.run(question)
+        # print(f"Json: {json}")
+        template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
+        p=template2.format(question=question)
+        try:
+            res=self.cmc_quotes_api.run(p) 
+        except Exception as err:
+            answer=self.answer_chain.run(question=inputs['user_input'],context=err.args)
+            return {self.output_key: answer}
+        answer=self.answer_chain.run(question=inputs['user_input'],context=res)
+        return {self.output_key: answer}
         
 
     async def _acall(
@@ -127,26 +130,25 @@ class CMCQuotesChain(Chain):
         # callbacks that are registered for that event.
         if run_manager:
             await run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
-        consider=await self.consider_chain.arun(question=response.generations[0][0].text,api_docs=all_templates.cmc_quote_lastest_api_doc)
+        consider=await self.consider_chain.arun(question=response.generations[0][0].text)
         if run_manager:
             await run_manager.on_text(consider, color="yellow", end="\n", verbose=self.verbose) 
-        if consider=="YES":
-            question=response.generations[0][0].text
-            # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
-            # question=template.format(question=response.generations[0][0].text)
-            # if run_manager:
-            #     run_manager.on_text(question, color="yellow", end="\n", verbose=self.verbose)
-            # json=self.cmc_currency_map_api.run(question)
-            # print(f"Json: {json}")
-            template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
-            p=template2.format(question=question)
-            try:
-                res=await self.cmc_quotes_api.arun(p) 
-                return {self.output_key: res}
-            except Exception as err:
-                return {self.output_key: err.args}
-        else:
-            return {self.output_key: consider}
+        question=response.generations[0][0].text
+        # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
+        # question=template.format(question=response.generations[0][0].text)
+        # if run_manager:
+        #     run_manager.on_text(question, color="yellow", end="\n", verbose=self.verbose)
+        # json=self.cmc_currency_map_api.run(question)
+        # print(f"Json: {json}")
+        template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
+        p=template2.format(question=question)
+        res=await self.cmc_quotes_api.arun(p) 
+        return {self.output_key: res}
+        # try:
+        #     res=await self.cmc_quotes_api.arun(p) 
+        #     return {self.output_key: res}
+        # except Exception as err:
+        #     return {self.output_key: err.args}
 
     @property
     def _chain_type(self) -> str:
@@ -169,11 +171,34 @@ class CMCQuotesChain(Chain):
             ],
             template=API_URL_PROMPT_TEMPLATE,
         )
-        api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,api_url_prompt=API_URL_PROMPT,headers=headers,**kwargs)
+        api_llm=ChatOpenAI(
+        # model_name="gpt-4",
+        temperature=0,
+        # request_timeout=120,
+        **kwargs
+        )
+        api=APIChain.from_llm_and_api_docs(llm=api_llm,api_docs=all_templates.cmc_quote_lastest_api_doc,api_url_prompt=API_URL_PROMPT,headers=headers,**kwargs)
         # api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
         consider_prompt=PromptTemplate(
-            input_variables=["api_docs","question"],
+            input_variables=["question"],
             template=all_templates.consider_can_answer_the_question_template
         )
-        consider=LLMChain(llm=llm,prompt=consider_prompt,**kwargs)
-        return cls(llm=llm,cmc_quotes_api=api,consider_chain=consider,**kwargs)
+        consider_llm=ChatOpenAI(
+        # model_name="gpt-4",
+        temperature=0,
+        # request_timeout=120,
+        **kwargs
+        )
+        consider=LLMChain(llm=consider_llm,prompt=consider_prompt,**kwargs)
+        answer_llm=ChatOpenAI(
+        model_name="gpt-4",
+        temperature=0,
+        # request_timeout=120,
+        **kwargs
+        )
+        answer_template=PromptTemplate(
+            input_variables=["context","question"],
+            template=all_templates.quotes_chain_answer,
+        )
+        answer_chain=LLMChain(llm=answer_llm,prompt=answer_template,**kwargs)
+        return cls(llm=llm,cmc_quotes_api=api,consider_chain=consider,answer_chain=answer_chain,**kwargs)
