@@ -128,12 +128,12 @@ percent_change_30d: 30 day change in the specified currency.
 """
 
 quotes_chain_template="""
-Please create a question related to cryptocurrency or crypto assets based on the information provided by the user, and use the original language.
+Please turn the user input into a fully formed question.
 User input: {user_input}
 """
 
 consider_can_answer_the_question_template="""
-The following question is about requesting a query for the latest market trend of a certain cryptocurrency. Please simplify this request as querying the latest market trend of that cryptocurrency.
+The following question is about requesting a query for the latest market trend of something. Please simplify this request as querying the latest market trend of that.
 Question: {question}
 """
 

@@ -103,6 +103,8 @@ class CMCQuotesChain(Chain):
             answer=self.answer_chain.run(question=inputs['user_input'],context=err.args)
             return {self.output_key: answer}
         answer=self.answer_chain.run(question=inputs['user_input'],context=res)
+        if run_manager:
+            run_manager.on_text(answer, color="yellow", end="\n", verbose=self.verbose) 
         return {self.output_key: answer}
         
 
