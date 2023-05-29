@@ -134,7 +134,7 @@ User input: {user_input}
 
 consider_can_answer_the_question_template="""
 The latest market trends include the latest price, 24-hour trading volume, 24-hour trading volume change, 24-hour reported trading volume, 7-day trading volume, 7-day reported trading volume, 30-day trading volume, 30-day reported trading volume, market capitalization, market cap dominance, fully diluted market cap, price percentage change in 1 hour, price percentage change in 24 hours, price percentage change in 7 days, and price percentage change in 30 days.
-The following question is about requesting a query for the latest market trend of something. Please simplify this request as querying the latest market trend of that only.
+The following question is about requesting a query for the latest market trend of something. Please simplify this request as "What is the latest market trend of " that only.
 Question: {question}
 """
 
