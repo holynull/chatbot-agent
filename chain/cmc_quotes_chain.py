@@ -130,10 +130,11 @@ class CMCQuotesChain(Chain):
         # callbacks that are registered for that event.
         if run_manager:
             await run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
-        consider=await self.consider_chain.arun(question=response.generations[0][0].text)
+        original_question=response.generations[0][0].text
+        consider=await self.consider_chain.arun(question=original_question)
         if run_manager:
             await run_manager.on_text(consider, color="yellow", end="\n", verbose=self.verbose) 
-        question=response.generations[0][0].text
+        question=consider
         # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
         # question=template.format(question=response.generations[0][0].text)
         # if run_manager:
@@ -142,13 +143,13 @@ class CMCQuotesChain(Chain):
         # print(f"Json: {json}")
         template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
         p=template2.format(question=question)
-        res=await self.cmc_quotes_api.arun(p) 
-        return {self.output_key: res}
-        # try:
-        #     res=await self.cmc_quotes_api.arun(p) 
-        #     return {self.output_key: res}
-        # except Exception as err:
-        #     return {self.output_key: err.args}
+        try:
+            res=await self.cmc_quotes_api.arun(p) 
+        except Exception as err:
+            answer=await self.answer_chain.arun(question=inputs['user_input'],context=err.args)
+            return {self.output_key: answer}
+        answer=await self.answer_chain.arun(question=inputs['user_input'],context=res)
+        return {self.output_key: answer}
 
     @property
     def _chain_type(self) -> str:
