@@ -149,6 +149,8 @@ class CMCQuotesChain(Chain):
             answer=await self.answer_chain.arun(question=inputs['user_input'],context=err.args)
             return {self.output_key: answer}
         answer=await self.answer_chain.arun(question=inputs['user_input'],context=res)
+        if run_manager:
+            await run_manager.on_text(answer, color="yellow", end="\n", verbose=self.verbose) 
         return {self.output_key: answer}
 
     @property
