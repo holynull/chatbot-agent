@@ -132,21 +132,13 @@ Please turn the user input into a fully formed question.
 User input: {user_input}
 """
 
-consider_can_answer_the_question_template="""
-The latest market trends include the latest price, 24-hour trading volume, 24-hour trading volume change, 24-hour reported trading volume, 7-day trading volume, 7-day reported trading volume, 30-day trading volume, 30-day reported trading volume, market capitalization, market cap dominance, fully diluted market cap, price percentage change in 1 hour, price percentage change in 24 hours, price percentage change in 7 days, and price percentage change in 30 days.
-The following question is about the latest market trend for a certain product. Assuming the product in question is A, please change the question to "What is the latest market trend of A?"
+consider_what_is_the_product="""
 Question: {question}
+The question is about the latest market trend for a certain product. Only tell me what is the product's name in the question and end with space? 
 """
 
-cc_map_api_template="""
-请查询用户提问中涉及到的数字资产或者数字货币的symbol和id。
-用户提问：{question}
-"""
-
-replace_name_to_id_template="""
-Please proceed with the query according to the following question.
-
-Question: {question}
+api_question_template="""
+What is the latest market trend of {product}?
 """
 
 quotes_chain_answer="""Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.

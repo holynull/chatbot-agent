@@ -85,20 +85,11 @@ class CMCQuotesChain(Chain):
         if run_manager:
             run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
         original_question=response.generations[0][0].text
-        consider=self.consider_chain.run(question=original_question)
+        product=self.consider_chain.run(question=original_question)
         if run_manager:
-            run_manager.on_text(consider, color="yellow", end="\n", verbose=self.verbose) 
-        question=consider
-        # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
-        # question=template.format(question=response.generations[0][0].text)
-        # if run_manager:
-        #     run_manager.on_text(question, color="yellow", end="\n", verbose=self.verbose)
-        # json=self.cmc_currency_map_api.run(question)
-        # print(f"Json: {json}")
-        template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
-        p=template2.format(question=question)
+            run_manager.on_text(product, color="yellow", end="\n", verbose=self.verbose) 
         try:
-            res=self.cmc_quotes_api.run(p) 
+            res=self.cmc_quotes_api.run(product) 
         except Exception as err:
             answer=self.answer_chain.run(question=inputs['user_input'],context=err.args)
             return {self.output_key: answer}
@@ -133,20 +124,11 @@ class CMCQuotesChain(Chain):
         if run_manager:
             await run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
         original_question=response.generations[0][0].text
-        consider=await self.consider_chain.arun(question=original_question)
+        product=await self.consider_chain.arun(question=original_question)
         if run_manager:
-            await run_manager.on_text(consider, color="yellow", end="\n", verbose=self.verbose) 
-        question=consider
-        # template=PromptTemplate(input_variables=["question"],template=all_templates.cc_map_api_template)
-        # question=template.format(question=response.generations[0][0].text)
-        # if run_manager:
-        #     run_manager.on_text(question, color="yellow", end="\n", verbose=self.verbose)
-        # json=self.cmc_currency_map_api.run(question)
-        # print(f"Json: {json}")
-        template2=PromptTemplate(input_variables=["question"],template=all_templates.replace_name_to_id_template)
-        p=template2.format(question=question)
+            await run_manager.on_text(product, color="yellow", end="\n", verbose=self.verbose) 
         try:
-            res=await self.cmc_quotes_api.arun(p) 
+            res=await self.cmc_quotes_api.arun(product) 
         except Exception as err:
             answer=await self.answer_chain.arun(question=inputs['user_input'],context=err.args)
             return {self.output_key: answer}
@@ -186,7 +168,7 @@ class CMCQuotesChain(Chain):
         # api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
         consider_prompt=PromptTemplate(
             input_variables=["question"],
-            template=all_templates.consider_can_answer_the_question_template
+            template=all_templates.consider_what_is_the_product
         )
         consider_llm=ChatOpenAI(
         # model_name="gpt-4",
