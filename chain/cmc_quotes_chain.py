@@ -35,10 +35,6 @@ class CMCQuotesChain(Chain):
     
     cmc_quotes_api:APIChain 
 
-    answer_chain:LLMChain
-
-    
-
     class Config:
         """Configuration for this pydantic object."""
 
@@ -163,7 +159,7 @@ class CMCQuotesChain(Chain):
         )
         api_llm=OpenAI(
             # model_name="gpt-4",
-            temperature=0.9,
+            temperature=0,
             request_timeout=600,
             **kwargs
         )
@@ -180,15 +176,4 @@ class CMCQuotesChain(Chain):
             **kwargs
         )
         consider=LLMChain(llm=consider_llm,prompt=consider_prompt,**kwargs)
-        answer_llm=OpenAI(
-            # model_name="gpt-4",
-            temperature=0.9,
-            request_timeout=600,
-            **kwargs
-        )
-        answer_template=PromptTemplate(
-            input_variables=["context","question"],
-            template=all_templates.quotes_chain_answer,
-        )
-        answer_chain=LLMChain(llm=answer_llm,prompt=answer_template,**kwargs)
-        return cls(llm=llm,cmc_quotes_api=api,consider_chain=consider,answer_chain=answer_chain,**kwargs)
+        return cls(llm=llm,cmc_quotes_api=api,consider_chain=consider,**kwargs)
