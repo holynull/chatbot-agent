@@ -157,7 +157,7 @@ class CMCQuotesChain(Chain):
             ],
             template=API_URL_PROMPT_TEMPLATE,
         )
-        api_llm=OpenAI(
+        api_llm=ChatOpenAI(
             # model_name="gpt-4",
             temperature=0,
             request_timeout=600,
