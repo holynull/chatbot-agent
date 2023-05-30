@@ -72,7 +72,7 @@ def get_agent(
     llm_qa = OpenAI(
         temperature=0.9,
         verbose=True,
-        request_timeout=120,
+        request_timeout=600,
     ) 
     search = GoogleSerperAPIWrapper()
     doc_search_swft = RetrievalQA.from_chain_type(llm=llm_qa, chain_type=chain_type, retriever=vcs_swft.as_retriever(),verbose=True)

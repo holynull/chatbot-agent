@@ -164,7 +164,7 @@ class CMCQuotesChain(Chain):
         api_llm=OpenAI(
             # model_name="gpt-4",
             temperature=0.9,
-            request_timeout=120,
+            request_timeout=600,
             **kwargs
         )
         api=APIChain.from_llm_and_api_docs(llm=api_llm,api_docs=all_templates.cmc_quote_lastest_api_doc,api_url_prompt=API_URL_PROMPT,headers=headers,**kwargs)
@@ -176,14 +176,14 @@ class CMCQuotesChain(Chain):
         consider_llm=OpenAI(
             # model_name="gpt-4",
             temperature=0,
-            request_timeout=120,
+            request_timeout=600,
             **kwargs
         )
         consider=LLMChain(llm=consider_llm,prompt=consider_prompt,**kwargs)
         answer_llm=OpenAI(
             # model_name="gpt-4",
             temperature=0.9,
-            request_timeout=120,
+            request_timeout=600,
             **kwargs
         )
         answer_template=PromptTemplate(
