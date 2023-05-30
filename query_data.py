@@ -61,13 +61,13 @@ def get_agent(
         # model_name="gpt-4",
         temperature=0.9,
         verbose=True,
-        # request_timeout=120,
+        request_timeout=600,
     )
     llm_quotes = OpenAI(
         # model_name="gpt-4",
         temperature=0,
         verbose=True,
-        request_timeout=120,
+        request_timeout=600,
     )
     llm_qa = OpenAI(
         temperature=0.9,
