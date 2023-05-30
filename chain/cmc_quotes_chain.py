@@ -173,7 +173,8 @@ class CMCQuotesChain(Chain):
             api_request_chain=LLMChain(llm=api_req_llm,prompt=API_URL_PROMPT,**kwargs),
             api_answer_chain=LLMChain(llm=api_res_llm,prompt=API_RESPONSE_PROMPT,**kwargs),
             api_docs=all_templates.cmc_quote_lastest_api_doc,
-            requests_wrapper = TextRequestsWrapper(headers=headers)
+            requests_wrapper = TextRequestsWrapper(headers=headers),
+            **kwargs,
             )
         # api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
         product_prompt=PromptTemplate(
