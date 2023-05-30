@@ -57,8 +57,8 @@ def get_qa_chain(
 def get_agent(
     chain_type: str, vcs_swft: VectorStore,vcs_path: VectorStore, agent_cb_handler) -> AgentExecutor:
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
-    llm = OpenAI(
-        # model_name="gpt-4",
+    llm = ChatOpenAI(
+        model_name="gpt-4",
         temperature=0.9,
         verbose=True,
         request_timeout=600,
@@ -119,7 +119,7 @@ def get_agent(
     agent_excutor = initialize_agent(
         tools=tools,
         llm=llm, 
-        agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
+        agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
         verbose=True, 
         memory=memory,
         callback_manager=agent_cb_manager,
