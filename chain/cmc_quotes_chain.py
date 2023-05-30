@@ -91,13 +91,14 @@ class CMCQuotesChain(Chain):
             run_manager.on_text(product, color="yellow", end="\n", verbose=self.verbose) 
         try:
             res=self.cmc_quotes_api.run(product) 
+            return {self.output_key: res}
         except Exception as err:
-            answer=self.answer_chain.run(question=inputs['user_input'],context=err.args)
-            return {self.output_key: answer}
-        answer=self.answer_chain.run(question=inputs['user_input'],context=res)
-        if run_manager:
-            run_manager.on_text(answer, color="yellow", end="\n", verbose=self.verbose) 
-        return {self.output_key: answer}
+            # answer=self.answer_chain.run(question=inputs['user_input'],context=err.args)
+            return {self.output_key: err.args}
+        # answer=self.answer_chain.run(question=inputs['user_input'],context=res)
+        # if run_manager:
+        #     run_manager.on_text(answer, color="yellow", end="\n", verbose=self.verbose) 
+        # return {self.output_key: answer}
         
 
     async def _acall(
@@ -130,13 +131,14 @@ class CMCQuotesChain(Chain):
             await run_manager.on_text(product, color="yellow", end="\n", verbose=self.verbose) 
         try:
             res=await self.cmc_quotes_api.arun(product) 
+            return {self.output_key: res}
         except Exception as err:
-            answer=await self.answer_chain.arun(question=inputs['user_input'],context=err.args)
-            return {self.output_key: answer}
-        answer=await self.answer_chain.arun(question=inputs['user_input'],context=res)
-        if run_manager:
-            await run_manager.on_text(answer, color="yellow", end="\n", verbose=self.verbose) 
-        return {self.output_key: answer}
+            # answer=await self.answer_chain.arun(question=inputs['user_input'],context=err.args)
+            return {self.output_key: err.args}
+        # answer=await self.answer_chain.arun(question=inputs['user_input'],context=res)
+        # if run_manager:
+        #     await run_manager.on_text(answer, color="yellow", end="\n", verbose=self.verbose) 
+        # return {self.output_key: answer}
 
     @property
     def _chain_type(self) -> str:
