@@ -159,7 +159,7 @@ class CMCQuotesChain(Chain):
         )
         api_llm=ChatOpenAI(
             # model_name="gpt-4",
-            temperature=0,
+            temperature=0.9,
             request_timeout=600,
             **kwargs
         )
