@@ -15,6 +15,7 @@ from langchain.chains import APIChain
 from langchain.prompts.base import BasePromptTemplate
 from langchain.prompts import PromptTemplate
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 
 from chain import all_templates
 
@@ -158,8 +159,8 @@ class CMCQuotesChain(Chain):
             ],
             template=API_URL_PROMPT_TEMPLATE,
         )
-        api_llm=ChatOpenAI(
-            model_name="gpt-4",
+        api_llm=OpenAI(
+            # model_name="gpt-4",
             temperature=0.9,
             # request_timeout=120,
             **kwargs
@@ -170,14 +171,14 @@ class CMCQuotesChain(Chain):
             input_variables=["question"],
             template=all_templates.consider_what_is_the_product
         )
-        consider_llm=ChatOpenAI(
+        consider_llm=OpenAI(
             # model_name="gpt-4",
             temperature=0,
             # request_timeout=120,
             **kwargs
         )
         consider=LLMChain(llm=consider_llm,prompt=consider_prompt,**kwargs)
-        answer_llm=ChatOpenAI(
+        answer_llm=OpenAI(
             # model_name="gpt-4",
             temperature=0.9,
             # request_timeout=120,

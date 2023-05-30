@@ -2,6 +2,7 @@
 from langchain.callbacks.manager import AsyncCallbackManager
 from langchain.memory import ConversationBufferMemory 
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 from langchain.vectorstores.base import VectorStore
 from langchain.utilities import GoogleSerperAPIWrapper
 import os
@@ -56,19 +57,19 @@ def get_qa_chain(
 def get_agent(
     chain_type: str, vcs_swft: VectorStore,vcs_path: VectorStore, agent_cb_handler) -> AgentExecutor:
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
-    llm = ChatOpenAI(
-        model_name="gpt-4",
+    llm = OpenAI(
+        # model_name="gpt-4",
         temperature=0.9,
         verbose=True,
         # request_timeout=120,
     )
-    llm_quotes = ChatOpenAI(
+    llm_quotes = OpenAI(
         # model_name="gpt-4",
         temperature=0,
         verbose=True,
         # request_timeout=120,
     )
-    llm_qa = ChatOpenAI(
+    llm_qa = OpenAI(
         temperature=0.9,
         verbose=True,
         # request_timeout=120,
