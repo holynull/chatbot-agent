@@ -133,7 +133,7 @@ User input: {user_input}
 """
 
 consider_what_is_the_product="""
-Question: {question}
+Question: {original_question}
 The question is about the latest market trend for a certain product. Only tell me what is the product's name in the question and end with space? 
 """
 

@@ -12,10 +12,13 @@ from langchain.callbacks.manager import (
 )
 from langchain.chains.base import Chain
 from langchain.chains import APIChain
+from langchain.chains.api.base import API_RESPONSE_PROMPT
 from langchain.prompts.base import BasePromptTemplate
 from langchain.prompts import PromptTemplate
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
+from langchain.chains import SequentialChain
+from langchain.requests import TextRequestsWrapper
 
 from chain import all_templates
 
@@ -31,9 +34,11 @@ class CMCQuotesChain(Chain):
     llm: BaseLanguageModel
     output_key: str = "text"  #: :meta private:
 
-    consider_chain:LLMChain
+    # consider_chain:LLMChain
     
-    cmc_quotes_api:APIChain 
+    # cmc_quotes_api:APIChain 
+
+    seq_chain:SequentialChain
 
     class Config:
         """Configuration for this pydantic object."""
@@ -82,14 +87,11 @@ class CMCQuotesChain(Chain):
         if run_manager:
             run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
         original_question=response.generations[0][0].text
-        product=self.consider_chain.run(question=original_question)
-        if run_manager:
-            run_manager.on_text(product, color="yellow", end="\n", verbose=self.verbose) 
         try:
-            res=self.cmc_quotes_api.run(product) 
+            res= self.seq_chain.run(original_question=original_question) 
             return {self.output_key: res}
         except Exception as err:
-            # answer=self.answer_chain.run(question=inputs['user_input'],context=err.args)
+            # answer=await self.answer_chain.arun(question=inputs['user_input'],context=err.args)
             return {self.output_key: err.args}
         # answer=self.answer_chain.run(question=inputs['user_input'],context=res)
         # if run_manager:
@@ -122,11 +124,8 @@ class CMCQuotesChain(Chain):
         if run_manager:
             await run_manager.on_text(response.generations[0][0].text, color="green", end="\n", verbose=self.verbose)
         original_question=response.generations[0][0].text
-        product=await self.consider_chain.arun(question=original_question)
-        if run_manager:
-            await run_manager.on_text(product, color="yellow", end="\n", verbose=self.verbose) 
         try:
-            res=await self.cmc_quotes_api.arun(product) 
+            res=await self.seq_chain.arun(original_question=original_question) 
             return {self.output_key: res}
         except Exception as err:
             # answer=await self.answer_chain.arun(question=inputs['user_input'],context=err.args)
@@ -157,23 +156,41 @@ class CMCQuotesChain(Chain):
             ],
             template=API_URL_PROMPT_TEMPLATE,
         )
-        api_llm=ChatOpenAI(
+        api_req_llm=ChatOpenAI(
             # model_name="gpt-4",
             temperature=0.9,
             request_timeout=60,
             **kwargs
         )
-        api=APIChain.from_llm_and_api_docs(llm=api_llm,api_docs=all_templates.cmc_quote_lastest_api_doc,api_url_prompt=API_URL_PROMPT,headers=headers,**kwargs)
+        api_res_llm=ChatOpenAI(
+            model_name="gpt-4",
+            temperature=0.9,
+            request_timeout=60,
+            **kwargs
+        )
+        # api=APIChain.from_llm_and_api_docs(llm=api_llm,api_docs=all_templates.cmc_quote_lastest_api_doc,api_url_prompt=API_URL_PROMPT,headers=headers,**kwargs)
+        api=APIChain(
+            api_request_chain=LLMChain(llm=api_req_llm,prompt=API_URL_PROMPT,**kwargs),
+            api_answer_chain=LLMChain(llm=api_res_llm,prompt=API_RESPONSE_PROMPT,**kwargs),
+            api_docs=all_templates.cmc_quote_lastest_api_doc,
+            requests_wrapper = TextRequestsWrapper(headers=headers)
+            )
         # api=APIChain.from_llm_and_api_docs(llm=llm,api_docs=all_templates.cmc_quote_lastest_api_doc,headers=headers,**kwargs)
-        consider_prompt=PromptTemplate(
-            input_variables=["question"],
+        product_prompt=PromptTemplate(
+            input_variables=["original_question"],
             template=all_templates.consider_what_is_the_product
         )
-        consider_llm=OpenAI(
+        product_llm=OpenAI(
             # model_name="gpt-4",
             temperature=0,
             request_timeout=60,
             **kwargs
         )
-        consider=LLMChain(llm=consider_llm,prompt=consider_prompt,**kwargs)
-        return cls(llm=llm,cmc_quotes_api=api,consider_chain=consider,**kwargs)
+        product_chain=LLMChain(llm=product_llm,prompt=product_prompt,output_key="product",**kwargs)
+        question_template=PromptTemplate(
+            input_variables=["product"],
+            template=all_templates.api_question_template,
+        )
+        question_chain=LLMChain(llm=product_llm,prompt=question_template,output_key="question",**kwargs)
+        seq_chain=SequentialChain(chains=[product_chain,question_chain,api],input_variables=["original_question"])
+        return cls(llm=llm,seq_chain=seq_chain,**kwargs)
