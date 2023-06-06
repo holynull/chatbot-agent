@@ -15,7 +15,7 @@ from langchain.chains.chat_vector_db.prompts import CONDENSE_QUESTION_PROMPT
 from langchain.chains.question_answering import load_qa_chain
 from langchain.agents.conversational_chat.base import ConversationalChatAgent
 from langchain.chains import APIChain
-from chain import all_templates
+from langchain import HuggingFacePipeline
 from chain.cmc_quotes_chain import CMCQuotesChain
 
 def get_qa_chain(
@@ -57,6 +57,7 @@ def get_qa_chain(
 def get_agent(
     chain_type: str, vcs_swft: VectorStore,vcs_path: VectorStore, agent_cb_handler) -> AgentExecutor:
     agent_cb_manager = AsyncCallbackManager([agent_cb_handler])
+	# llm=HuggingFacePipeline.from_model_id()
     llm = ChatOpenAI(
         model_name="gpt-4",
         temperature=0.9,
