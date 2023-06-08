@@ -20,6 +20,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from dotenv import load_dotenv
 import os
 
+logging.basicConfig(level=logging.INFO)
 
 if getattr(sys, 'frozen', False):
     script_location = pathlib.Path(sys.executable).parent.resolve()
